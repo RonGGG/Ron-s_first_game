@@ -14,7 +14,11 @@
 /*得到一个随机的宽度(>=球的宽度,<屏幕宽度)*/
 -(CGFloat)getRadom_ground_wid{
     //随机生成小于SCREEN_WIDTH的数
-    return (CGFloat)arc4random_uniform(SCREEN_WIDTH);
+    while (1) {
+        if (arc4random_uniform(SCREEN_WIDTH)>=BALL_DIAMETER) {
+            return (CGFloat)arc4random_uniform(SCREEN_WIDTH);
+        }
+    }
 }
 /*在x出生成一个随机宽度的ground*/
 -(instancetype)initWithRandom:(CGFloat)x{
@@ -28,8 +32,7 @@
         UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panFunc:)];
         [self addGestureRecognizer:pan];
     }
-    //每次生成新的view都要打印所有的views
-    NSLog(@"subviews:%@",self.superview.subviews);
+    
     return self;
 }
 /*init就是x为0的初始化*/
@@ -54,19 +57,22 @@
             break;
         }
         case UIGestureRecognizerStateChanged:{
-            NSLog(@"*UIGestureRecognizerStateChanged*");
+//            NSLog(@"*UIGestureRecognizerStateChanged*");
             //通过手势位置，计算出当前view的center
             point = CGPointMake(point.x-self.move_x, self.frame.origin.y+GROUND_HEIGHT/2);
-            //得到两点之间位移
+            //得到两点之间位移(move>0:右移 move:<0:左移)
             CGFloat move = point.x-sender.view.center.x;
-            for (UIView * view in self.superview.subviews) {
-                if (view!=self) {
-                    CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
-                    view.center = viewCenter;
+            //
+//            if (!(move>=0 && self.frame.origin.x>=0 && self==self.superview.subviews.firstObject)) {
+                for (UIView * view in self.superview.subviews) {
+                    if (view!=self) {
+                        CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
+                        view.center = viewCenter;
+                    }
                 }
-            }
-            //更改center
-            sender.view.center = point;
+                //更改center
+                sender.view.center = point;
+//            }
             break;
         }
         default:
