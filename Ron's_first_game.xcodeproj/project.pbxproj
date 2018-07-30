@@ -15,6 +15,7 @@
 		A7AF115C2108C25C00AAC40F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF115B2108C25C00AAC40F /* main.m */; };
 		A7AF11662108C25C00AAC40F /* Ron_s_first_gameTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11652108C25C00AAC40F /* Ron_s_first_gameTests.m */; };
 		A7AF11712108C25C00AAC40F /* Ron_s_first_gameUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11702108C25C00AAC40F /* Ron_s_first_gameUITests.m */; };
+		A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF121E210DC38F00AAC40F /* GroundView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,9 @@
 		A7AF116C2108C25C00AAC40F /* Ron's_first_gameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ron's_first_gameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7AF11702108C25C00AAC40F /* Ron_s_first_gameUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Ron_s_first_gameUITests.m; sourceTree = "<group>"; };
 		A7AF11722108C25C00AAC40F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7AF121D210DC38F00AAC40F /* GroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroundView.h; sourceTree = "<group>"; };
+		A7AF121E210DC38F00AAC40F /* GroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroundView.m; sourceTree = "<group>"; };
+		A7AF1223210F126A00AAC40F /* Constants.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,13 +107,14 @@
 			children = (
 				A7AF114C2108C25900AAC40F /* AppDelegate.h */,
 				A7AF114D2108C25900AAC40F /* AppDelegate.m */,
-				A7AF114F2108C25900AAC40F /* ViewController.h */,
-				A7AF11502108C25900AAC40F /* ViewController.m */,
+				A7AF1221210F0FEF00AAC40F /* Controllers */,
+				A7AF1220210F0FD900AAC40F /* Views */,
 				A7AF11522108C25900AAC40F /* Main.storyboard */,
 				A7AF11552108C25C00AAC40F /* Assets.xcassets */,
 				A7AF11572108C25C00AAC40F /* LaunchScreen.storyboard */,
 				A7AF115A2108C25C00AAC40F /* Info.plist */,
 				A7AF115B2108C25C00AAC40F /* main.m */,
+				A7AF1223210F126A00AAC40F /* Constants.pch */,
 			);
 			path = "Ron's_first_game";
 			sourceTree = "<group>";
@@ -130,6 +135,24 @@
 				A7AF11722108C25C00AAC40F /* Info.plist */,
 			);
 			path = "Ron's_first_gameUITests";
+			sourceTree = "<group>";
+		};
+		A7AF1220210F0FD900AAC40F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A7AF121D210DC38F00AAC40F /* GroundView.h */,
+				A7AF121E210DC38F00AAC40F /* GroundView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A7AF1221210F0FEF00AAC40F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A7AF114F2108C25900AAC40F /* ViewController.h */,
+				A7AF11502108C25900AAC40F /* ViewController.m */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7AF11512108C25900AAC40F /* ViewController.m in Sources */,
+				A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */,
 				A7AF115C2108C25C00AAC40F /* main.m in Sources */,
 				A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */,
 			);
@@ -360,6 +384,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Ron's_first_game/Constants.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -416,6 +442,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Ron's_first_game/Constants.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
