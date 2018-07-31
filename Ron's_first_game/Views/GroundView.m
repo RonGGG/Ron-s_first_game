@@ -20,6 +20,21 @@
         }
     }
 }
+/*自定义带frame的初始化：(只能自定义x和宽度)*/
+-(instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        //属性初始化
+        self.frame = CGRectMake(frame.origin.x, SCREEN_HEIGHT-GROUND_HEIGHT, frame.size.width, GROUND_HEIGHT);
+        self.backgroundColor = [UIColor darkGrayColor];
+        self.layer.masksToBounds = YES;
+        self.userInteractionEnabled = YES;
+        //手势初始化
+        UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panFunc:)];
+        [self addGestureRecognizer:pan];
+    }
+    
+    return self;
+}
 /*在x出生成一个随机宽度的ground*/
 -(instancetype)initWithRandom:(CGFloat)x{
     if (self = [super init]) {
@@ -62,17 +77,15 @@
             point = CGPointMake(point.x-self.move_x, self.frame.origin.y+GROUND_HEIGHT/2);
             //得到两点之间位移(move>0:右移 move:<0:左移)
             CGFloat move = point.x-sender.view.center.x;
-            //
-//            if (!(move>=0 && self.frame.origin.x>=0 && self==self.superview.subviews.firstObject)) {
-                for (UIView * view in self.superview.subviews) {
-                    if (view!=self) {
-                        CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
-                        view.center = viewCenter;
-                    }
+            
+            for (GroundView * view in self.superview.subviews) {
+                if (view!=self) {
+                    CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
+                    view.center = viewCenter;
                 }
-                //更改center
-                sender.view.center = point;
-//            }
+            }
+            //更改center
+            sender.view.center = point;
             break;
         }
         default:
@@ -84,8 +97,8 @@
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
 -(CGFloat)ground_check{
     CGRect lastObj_frame = self.superview.subviews.lastObject.frame;
-    if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_WID<=SCREEN_WIDTH) {
-        return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_WID;
+    if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP<=SCREEN_WIDTH) {
+        return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP;
     }
     return 0;
 }

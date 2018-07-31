@@ -13,32 +13,59 @@
 @interface ViewController ()
 @property (weak,nonatomic) UIView * ground_back;
 @property (weak,nonatomic) BallView * ball;
+
+@property (assign,nonatomic) BOOL pause;
+//@property (weak,nonatomic) UIButton * pause_btn;
 @end
 
 @implementation ViewController
-//-(BOOL)check_gameover{
-//    if (self.ball.center.x) {
-//        <#statements#>
-//    }
-//}
--(void)ballAnimationWithDuration:(NSTimeInterval)duratoin{
+/*检查游戏是否暂停*/
+-(void)check_pause{
+    
+}
+/*检查游戏是否结束*/
+-(BOOL)check_gameover{
+    //检查球是否掉下去
+    if (self.ball.center.y==SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2) {//球已到最低点
+        for (GroundView * view in self.ground_back.subviews) {
+            if (view.frame.origin.x-GROUND_GAP<SCREEN_WIDTH/2 && view.frame.origin.x>SCREEN_WIDTH/2) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+/*球动画方法*/
+-(void)ballAnimationWithDuration:(NSTimeInterval)duratoin andBounceHeight:(CGFloat)height{
     [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGPoint tempPoint=self.ball.center;
-        tempPoint.y += 60;
+        tempPoint.y += height;
         self.ball.center=tempPoint;
     } completion:^(BOOL finished) {
         //check here//
-        [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            CGPoint tempPoint=self.ball.center;
-            tempPoint.y -= 60;
-            self.ball.center=tempPoint;
-        } completion:^(BOOL finished) {
-            [self ballAnimationWithDuration:duratoin];
-        }];
+        if ([self check_gameover]) {
+            //这里做游戏结束处理：
+            [self.ball.layer removeAllAnimations];
+            return ;
+        }else{
+            [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                CGPoint tempPoint=self.ball.center;
+                tempPoint.y -= height;
+                self.ball.center=tempPoint;
+            } completion:^(BOOL finished) {
+                if (self.pause) {
+                    [self.ball.layer removeAllAnimations];
+                    return ;
+                }
+                [self ballAnimationWithDuration:duratoin andBounceHeight:height];
+            }];
+        }
     }];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //初始化各种属性
+    self.pause = NO;
     //ground的背景
     UIView * ground_background = [[UIView alloc]initWithFrame:self.view.frame];
     self.ground_back = ground_background;
@@ -46,7 +73,7 @@
     [self.view addSubview:ground_background];
     
     //元祖ground:
-    GroundView * ground = [[GroundView alloc]init];
+    GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
     ground.createNewGround = ^(CGFloat x_of_new) {
         [self createGround:x_of_new];
     };
@@ -61,8 +88,21 @@
     self.ball = ball;
     [self.view addSubview:ball];
     //球的动画：
-    [self ballAnimationWithDuration:1.0];
+//    [self ballAnimationWithDuration:0.5 andBounceHeight:60];
+    //Pause:
+    UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 200, 100)];
+//    self.pause_btn = pause;
+    [pause setSelected:NO];
+    pause.backgroundColor = [UIColor redColor];
+    pause.titleLabel.font =  [UIFont fontWithName:@"PingFangSC-Regular" size:20];
+    pause.titleLabel.textColor =  [UIColor blackColor];
+    
+    [pause setTitle:@"Begin" forState:UIControlStateNormal];
+    [pause setTitle:@"End" forState:UIControlStateSelected];
+    [pause addTarget:self action:@selector(clickPause:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:pause];
 }
+/*创建新的ground*/
 -(void)createGround:(CGFloat)x{
     //每次生成新的view都要打印所有的views
     NSLog(@"subviews:%@ count:%ld",self.ground_back.subviews,self.ground_back.subviews.count);
@@ -77,6 +117,19 @@
         [self createGround:x];
     }
 }
-
+/*点击pause*/
+-(void)clickPause:(id)sender{
+    UIButton * btn = (UIButton*)sender;
+    [self.ball.layer removeAllAnimations];
+    if (btn.isSelected) {//show"pause"
+        self.pause = YES;
+        [btn setSelected:NO];
+    }else{//show"begin"
+        self.pause = NO;
+        [btn setSelected:YES];
+        
+        [self ballAnimationWithDuration:0.5 andBounceHeight:60];
+    }
+}
 
 @end

@@ -21,7 +21,7 @@
 /*陆地高度，屏幕高度1/3*/
 #define GROUND_HEIGHT [UIScreen mainScreen].bounds.size.height/3
 /*陆地之间宽度（暂时固定为40）*/
-#define GROUND_WID 40
+#define GROUND_GAP 40
 
 /*球直径*/
 #define BALL_DIAMETER 30
