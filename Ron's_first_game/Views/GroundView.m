@@ -8,7 +8,7 @@
 
 #import "GroundView.h"
 @interface GroundView()
-@property (assign,nonatomic) CGFloat move_x;
+
 @end
 @implementation GroundView
 /*得到一个随机的宽度(>=球的宽度,<屏幕宽度)*/
@@ -67,32 +67,19 @@
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:{
             NSLog(@"*UIGestureRecognizerStateBegan*");
-            self.move_x = point.x-sender.view.center.x;
-            NSLog(@"self.movex: %f",self.move_x);
+            //回调block
+            self.block_GestureStateBegin(self,point,sender);
             break;
         }
         case UIGestureRecognizerStateChanged:{
 //            NSLog(@"*UIGestureRecognizerStateChanged*");
-            //通过手势位置，计算出当前view的center
-            point = CGPointMake(point.x-self.move_x, self.frame.origin.y+GROUND_HEIGHT/2);
-            //得到两点之间位移(move>0:右移 move:<0:左移)
-            CGFloat move = point.x-sender.view.center.x;
-            
-            for (GroundView * view in self.superview.subviews) {
-                if (view!=self) {
-                    CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
-                    view.center = viewCenter;
-                }
-            }
-            //更改center
-            sender.view.center = point;
+            //回调block
+            self.block_GestureStateChanged(self,point,sender);
             break;
         }
         default:
             break;
     }
-    
-    
 }
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
 -(CGFloat)ground_check{

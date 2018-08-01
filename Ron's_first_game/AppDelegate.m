@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "StartInterfaceController.h"
 @interface AppDelegate ()
 
 @end
@@ -16,7 +16,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    StartInterfaceController * startVC = [[StartInterfaceController alloc]init];
+    self.window.rootViewController = startVC;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
