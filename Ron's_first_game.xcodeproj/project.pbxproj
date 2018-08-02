@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A787730C2112F8EE00CAEB7B /* GlobalVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = A787730B2112F8EE00CAEB7B /* GlobalVariables.m */; };
 		A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF114D2108C25900AAC40F /* AppDelegate.m */; };
 		A7AF11512108C25900AAC40F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11502108C25900AAC40F /* ViewController.m */; };
 		A7AF11542108C25900AAC40F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7AF11522108C25900AAC40F /* Main.storyboard */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A787730A2112F8EE00CAEB7B /* GlobalVariables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalVariables.h; sourceTree = "<group>"; };
+		A787730B2112F8EE00CAEB7B /* GlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalVariables.m; sourceTree = "<group>"; };
 		A7AF11492108C25900AAC40F /* Ron's_first_game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ron's_first_game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7AF114C2108C25900AAC40F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A7AF114D2108C25900AAC40F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -124,6 +127,8 @@
 				A7AF115A2108C25C00AAC40F /* Info.plist */,
 				A7AF115B2108C25C00AAC40F /* main.m */,
 				A7AF1223210F126A00AAC40F /* Constants.pch */,
+				A787730A2112F8EE00CAEB7B /* GlobalVariables.h */,
+				A787730B2112F8EE00CAEB7B /* GlobalVariables.m */,
 			);
 			path = "Ron's_first_game";
 			sourceTree = "<group>";
@@ -306,6 +311,7 @@
 				A7AF123D210F46D000AAC40F /* BallView.m in Sources */,
 				A7AF115C2108C25C00AAC40F /* main.m in Sources */,
 				A7B9F7492111F42200F0949E /* TheCardView.m in Sources */,
+				A787730C2112F8EE00CAEB7B /* GlobalVariables.m in Sources */,
 				A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -481,6 +487,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NL34K93VD7;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Ron's_first_game/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -498,6 +505,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NL34K93VD7;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Ron's_first_game/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

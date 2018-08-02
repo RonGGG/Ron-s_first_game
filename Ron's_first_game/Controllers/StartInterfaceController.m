@@ -16,6 +16,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    NSLog(@"Type:%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"machineType"]);
     self.view.backgroundColor = [UIColor whiteColor];
     UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2-30, SCREEN_HEIGHT/2-30, 60, 60)];
     [btn setTitle:@"开始" forState:UIControlStateNormal];

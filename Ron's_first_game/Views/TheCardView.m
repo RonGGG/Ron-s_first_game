@@ -13,6 +13,8 @@
 #define CARD_HEIGHT [UIScreen mainScreen].bounds.size.height*2/3
 @interface TheCardView()
 @property (weak,nonatomic) UIButton * playAgain;
+@property (weak,nonatomic) UIView * card;
+@property (assign,nonatomic) BOOL show;
 @end
 @implementation TheCardView
 
@@ -21,9 +23,19 @@
     self = [super init];
     if (self) {
 //        self.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH, CARD_HEIGHT);
+        //
+        self.show = NO;
         
-        self.backgroundColor = [UIColor grayColor];
         
+        self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        self.backgroundColor = [UIColor clearColor];
+        
+        //Card
+        UIView * card = [[UIView alloc]init];
+        card.backgroundColor = [UIColor grayColor];
+        self.card = card;
+        [self addSubview:card];
+        //Button
         UIButton * playAgain = [[UIButton alloc]init];
         self.playAgain = playAgain;
         playAgain.backgroundColor = [UIColor redColor];
@@ -31,26 +43,45 @@
         playAgain.titleLabel.textColor = [UIColor whiteColor];
         
         [playAgain addTarget:self action:@selector(playAgain:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:playAgain];
+        [self.card addSubview:playAgain];
     }
     return self;
 }
 -(void)playAgain:(UIButton*)sender{
     self.block_PlayAgain();
-    [self removeFromSuperview];
+    [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.card.frame = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
+        //        self.layer.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH/2, CARD_HEIGHT/2);
+        self.playAgain.frame = CGRectMake(0, 0, 0, 0);
+        
+    } completion:^(BOOL finished) {
+        if (finished) {
+            self.show = NO;
+            [self removeFromSuperview];
+        }
+    }];
+
+    
 }
 - (void)layoutSubviews{
-    self.layer.cornerRadius = 12;
-    self.layer.masksToBounds = YES;
-    self.frame = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
-    self.playAgain.frame = CGRectMake(0, 0, 0, 0);
-    [UIView animateWithDuration:2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH, CARD_HEIGHT);
-        self.playAgain.frame = CGRectMake(CARD_WIDTH/2-50, CARD_HEIGHT/2-50, 100, 100);
-        self.playAgain.layer.cornerRadius = self.playAgain.frame.size.height/2;
-    } completion:^(BOOL finished) {
-        
-    }];
+    [super layoutSubviews];
+    if (self.show == NO) {
+        self.card.layer.cornerRadius = 12;
+        self.card.layer.masksToBounds = YES;
+        self.card.frame = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
+        self.playAgain.frame = CGRectMake(0, 0, 0, 0);
+        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.card.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH, CARD_HEIGHT);
+            //        self.layer.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH/2, CARD_HEIGHT/2);
+            self.playAgain.frame = CGRectMake(CARD_WIDTH/2-50, CARD_HEIGHT/2-50, 100, 100);
+            self.playAgain.layer.cornerRadius = self.playAgain.frame.size.height/2;
+        } completion:^(BOOL finished) {
+            if (finished) {
+                self.show = finished;
+            }
+        }];
+    }
+    
 }
 - (void)drawRect:(CGRect)rect {
     // Drawing code
