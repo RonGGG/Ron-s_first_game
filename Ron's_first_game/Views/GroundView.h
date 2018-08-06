@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface GroundView : UIView
-/*概属性用来标示该ground是不是元祖ground*/
-//@property (assign,nonatomic) BOOL isTheFirstGround;
+/*用来标示球是否在这个gronud上落过*/
+@property (assign,nonatomic) BOOL hasLanded;
 /*第一次触摸点和中心点之间的x方向的位移*/
 @property (assign,nonatomic) CGFloat move_x;
 /*该方法用于初始化view，参数x是view的x*/

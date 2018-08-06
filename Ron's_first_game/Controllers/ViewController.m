@@ -10,6 +10,7 @@
 #import "BallView.h"
 #import "GroundView.h"
 #import "TheCardView.h"
+#import "UserInfo.h"
 @interface ViewController ()
 @property (weak,nonatomic) UIView * ground_back;
 @property (weak,nonatomic) BallView * ball;
@@ -19,9 +20,12 @@
 @property (weak,nonatomic) GroundView * firstGround;
 @property (weak,nonatomic) UIView * backView;
 @property (weak,nonatomic) UIView * clearBack;
+@property (weak,nonatomic) UILabel * points;
 
 @property (assign,nonatomic) CGFloat count;
 @property (strong,nonatomic) NSTimer * timer;
+
+@property (assign,nonatomic) CGFloat totalScores;
 
 @end
 //safe area适配：
@@ -40,6 +44,45 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     inset = UIEdgeInsetsMake(inset.top, inset.left, 0, inset.right);
     self.backView.frame = UIEdgeInsetsInsetRect(self.view.frame, inset);
     NSLog(@"Inset:(%f,%f,%f,%f)",inset.top,inset.left,inset.bottom,inset.right);
+}
+/*计算分数*/
+-(void)calculate_scores{
+    //计算分数:
+    GroundView * currentGround = [self checkCurrentGround];//得到当前球所落的ground
+    if (currentGround.hasLanded) {//球如果已经落过，则不再计算分数
+        return;
+    }
+    currentGround.hasLanded = YES;//球已经落过
+    /*
+     计算当前ground的分数:
+     一次函数形式增长，BALL_DIAMETER处是分界，k会有一个突变
+     (暂时就用这个方法吧，后期如果需要再改)
+     */
+    CGFloat scores;
+    NSLog(@"***Currentwid:%f",currentGround.frame.size.width);
+    CGFloat k1 = -0.5;
+    CGFloat b1 = 1-k1*SCREEN_WIDTH/2;
+    CGFloat k2 = 50*k1;
+    CGFloat b2 = (k1*BALL_DIAMETER+b1)-k2*BALL_DIAMETER;
+    if (currentGround.frame.size.width>BALL_DIAMETER) {//正比k增长
+        scores = currentGround.frame.size.width*k1 + b1 + 6;
+    }else{//正比 10k 增长
+        scores = currentGround.frame.size.width*k2 + b2 + 6;
+    }
+    NSLog(@"***Scores:%f",scores);
+    self.totalScores+=scores;//分数累计
+    NSLog(@"**Totals:%f",self.totalScores);
+    //更新视图:
+    self.points.text = [NSString stringWithFormat:@"%ld",(NSInteger)self.totalScores];
+}
+/*检查当前球在哪个ground上落下:(如果没有返回nil，当然这种情况发生就说明程序出错了)*/
+-(GroundView * )checkCurrentGround{
+    for (GroundView * view in self.ground_back.subviews) {
+        if (view.frame.origin.x<SCREEN_WIDTH/2 && view.frame.origin.x+view.frame.size.width>SCREEN_WIDTH/2) {
+            return view;
+        }
+    }
+    return nil;
 }
 /*检查游戏是否结束*/
 -(BOOL)check_gameover{
@@ -78,7 +121,12 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
         self.ball.center=tempPoint;
     } completion:^(BOOL finished) {
         if (finished) {
-            if ([self check_gameover]) {
+            
+            if ([self check_gameover]) {//查看球是否游戏结束
+                //比较分数
+                if (((NSInteger)self.totalScores) > [UserInfo sharedUser].scores) {
+                    [UserInfo sharedUser].scores = self.totalScores;
+                }
                 //这里做游戏结束处理：
                 [self.ball.layer removeAllAnimations];
                 //更改按钮状态
@@ -86,7 +134,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
                 /*展示结束界面*/
                 [self showEnd];
                 return ;
-            }else{
+            }else{//游戏未结束
+                //计算分数
+                [self calculate_scores];
+                
                 [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
 //                    CGPoint tempPoint=self.ball.center;
                     CGPoint tempPoint = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2);
@@ -98,6 +149,8 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
                     }
                 }];
             }
+//            NSLog(@"**Totals:%f",self.totalScores);
+//            NSLog(@"**User score:%ld",[UserInfo sharedUser].scores);
         }
     }];
 }
@@ -136,8 +189,14 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     BallView * ball = [[BallView alloc]initWithFrame:CGRectMake(self.view.center.x-BALL_DIAMETER/2, SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER-60, BALL_DIAMETER, BALL_DIAMETER)];
     self.ball = ball;
     [self.backView addSubview:ball];
+    //Go Back to StartInterface:
+    UIButton * goBack = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
+    goBack.backgroundColor = [UIColor redColor];
+    [goBack setTitle:@"Back" forState:UIControlStateNormal];
+    [goBack addTarget:self action:@selector(goBackTo_startInterface) forControlEvents:UIControlEventTouchUpInside];
+    [self.backView addSubview:goBack];
     //Pause:
-    UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 100, 50)];
+    UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(goBack.frame.origin.x+goBack.frame.size.width+20, goBack.frame.origin.y, 100, 50)];
     self.pause_btn = pause;
     [pause setSelected:NO];
     pause.backgroundColor = [UIColor redColor];
@@ -148,19 +207,30 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [pause setTitle:@"End" forState:UIControlStateSelected];
     [pause addTarget:self action:@selector(clickPause:) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:pause];
-    //Go Back to StartInterface:
-    UIButton * goBack = [[UIButton alloc]initWithFrame:CGRectMake(pause.frame.origin.x+pause.frame.size.width+20, pause.frame.origin.y, 50, 50)];
-    goBack.backgroundColor = [UIColor redColor];
-    [goBack setTitle:@"Back" forState:UIControlStateNormal];
-    [goBack addTarget:self action:@selector(goBackTo_startInterface) forControlEvents:UIControlEventTouchUpInside];
-    [self.backView addSubview:goBack];
+    //Scores:
+    CGFloat suf_wid = 60;
+    UILabel * suffix = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-suf_wid-10, 0, suf_wid, 50)];
+    suffix.textAlignment = NSTextAlignmentCenter;
+    suffix.textColor = [UIColor blackColor];
+    suffix.text = @"points";
+    [self.backView addSubview:suffix];
+    
+    CGFloat pointsWid = SCREEN_WIDTH-(pause.frame.origin.x+pause.frame.size.width+10)-suf_wid-10;
+    UILabel * points = [[UILabel alloc]initWithFrame:CGRectMake(pause.frame.origin.x+pause.frame.size.width+10, 0, pointsWid, 50)];
+    self.points = points;
+    points.textAlignment = NSTextAlignmentRight;
+    points.textColor = [UIColor blackColor];
+    points.text = @"0";
+    [self.backView addSubview:points];
+    
 }
 /*创建元祖ground*/
 -(void)createInitGround{
     //元祖ground:
     GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
     self.firstGround = ground;
-    //    ground.isTheFirstGround = YES;//只有元祖ground才是yes
+    self.totalScores = 0;  //新一轮游戏需要置零记分器
+    ground.hasLanded = NO;//只有元祖ground才是yes
     ground.createNewGround = ^(CGFloat x_of_new) {
         [self createGround:x_of_new];
     };
@@ -185,7 +255,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     NSLog(@"subviews:%@ count:%ld",self.ground_back.subviews,self.ground_back.subviews.count);
     //递归ground
     GroundView * ground_new = [[GroundView alloc]initWithRandom:x];
-//    ground_new.isTheFirstGround = NO;
+    //得到每次新生成的ground的宽度
+//    CGFloat widOfGround = ground_new.frame.size.width;
+    //表示球没有在这个ground上落过
+    ground_new.hasLanded = NO;
+    
     [self.ground_back addSubview:ground_new];
     ground_new.createNewGround = ^(CGFloat x_of_new) {
         [self createGround:x_of_new];

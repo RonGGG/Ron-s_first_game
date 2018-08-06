@@ -13,10 +13,11 @@
 @implementation GroundView
 /*得到一个随机的宽度(>=球的宽度,<屏幕宽度)*/
 -(CGFloat)getRadom_ground_wid{
-    //随机生成小于SCREEN_WIDTH的数
+    uint32_t wid;
     while (1) {
-        if (arc4random_uniform(SCREEN_WIDTH)>=BALL_DIAMETER) {
-            return (CGFloat)arc4random_uniform(SCREEN_WIDTH);
+        wid = arc4random_uniform(SCREEN_WIDTH/2);
+        if (wid>=BALL_DIAMETER/3) {
+            return (CGFloat)wid;
         }
     }
 }

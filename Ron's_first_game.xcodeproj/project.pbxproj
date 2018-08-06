@@ -18,6 +18,7 @@
 		A7AF11712108C25C00AAC40F /* Ron_s_first_gameUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11702108C25C00AAC40F /* Ron_s_first_gameUITests.m */; };
 		A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF121E210DC38F00AAC40F /* GroundView.m */; };
 		A7AF123D210F46D000AAC40F /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF123C210F46D000AAC40F /* BallView.m */; };
+		A7B679042116F66700F7DAC1 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679032116F66700F7DAC1 /* UserInfo.m */; };
 		A7B9F7492111F42200F0949E /* TheCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B9F7482111F42200F0949E /* TheCardView.m */; };
 		A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B9F74B2111F5AE00F0949E /* StartInterfaceController.m */; };
 /* End PBXBuildFile section */
@@ -63,6 +64,8 @@
 		A7AF1223210F126A00AAC40F /* Constants.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.pch; sourceTree = "<group>"; };
 		A7AF123B210F46D000AAC40F /* BallView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BallView.h; sourceTree = "<group>"; };
 		A7AF123C210F46D000AAC40F /* BallView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BallView.m; sourceTree = "<group>"; };
+		A7B679022116F66700F7DAC1 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
+		A7B679032116F66700F7DAC1 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
 		A7B9F7472111F42200F0949E /* TheCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TheCardView.h; sourceTree = "<group>"; };
 		A7B9F7482111F42200F0949E /* TheCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TheCardView.m; sourceTree = "<group>"; };
 		A7B9F74A2111F5AE00F0949E /* StartInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StartInterfaceController.h; sourceTree = "<group>"; };
@@ -119,6 +122,7 @@
 			children = (
 				A7AF114C2108C25900AAC40F /* AppDelegate.h */,
 				A7AF114D2108C25900AAC40F /* AppDelegate.m */,
+				A7B679012116F64500F7DAC1 /* Data */,
 				A7AF1221210F0FEF00AAC40F /* Controllers */,
 				A7AF1220210F0FD900AAC40F /* Views */,
 				A7AF11522108C25900AAC40F /* Main.storyboard */,
@@ -173,6 +177,15 @@
 				A7B9F74B2111F5AE00F0949E /* StartInterfaceController.m */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A7B679012116F64500F7DAC1 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A7B679022116F66700F7DAC1 /* UserInfo.h */,
+				A7B679032116F66700F7DAC1 /* UserInfo.m */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */,
+				A7B679042116F66700F7DAC1 /* UserInfo.m in Sources */,
 				A7AF11512108C25900AAC40F /* ViewController.m in Sources */,
 				A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */,
 				A7AF123D210F46D000AAC40F /* BallView.m in Sources */,
