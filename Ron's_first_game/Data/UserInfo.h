@@ -9,8 +9,22 @@
 #import <Foundation/Foundation.h>
 
 @interface UserInfo : NSObject
-@property (strong,nonatomic) NSString * userName;
-@property (assign,nonatomic) NSInteger scores;
+/*用户信息数据：
+ {
+ uid，
+ 昵称，
+ 头像，
+ 性别，
+ 最高分数：记录历史最高成绩（获取积分数组时用）
+ 分数数组：记录每次更新的积分信息
+ }
+*/
+@property (strong,nonatomic) NSNumber * uid;
+@property (strong,nonatomic) NSString * nickName;
+@property (strong,nonatomic) NSData * avatar;
+@property (assign,nonatomic) BOOL isMale;
+@property (assign,nonatomic) NSInteger highestScore;
+
 
 +(UserInfo *)sharedUser;
 @end

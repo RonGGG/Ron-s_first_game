@@ -12,7 +12,7 @@ static UserInfo * user = nil;
 + (UserInfo *)sharedUser{
     if (user==nil) {
         user = [[UserInfo alloc]init];
-        user.scores = 0;
+        user.highestScore = 0;
     }
     return user;
 }

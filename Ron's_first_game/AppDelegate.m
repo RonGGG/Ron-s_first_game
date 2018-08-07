@@ -25,7 +25,6 @@
     //并数据持久化保存硬盘：
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding] forKey:machineType];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
     //设置视图:
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     StartInterfaceController * startVC = [[StartInterfaceController alloc]init];

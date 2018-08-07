@@ -19,6 +19,24 @@
 		A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF121E210DC38F00AAC40F /* GroundView.m */; };
 		A7AF123D210F46D000AAC40F /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF123C210F46D000AAC40F /* BallView.m */; };
 		A7B679042116F66700F7DAC1 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679032116F66700F7DAC1 /* UserInfo.m */; };
+		A7B6791E211814BB00F7DAC1 /* ScoresViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B6791D211814BB00F7DAC1 /* ScoresViewController.m */; };
+		A7B679DE2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679BC2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.m */; };
+		A7B679DF2118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679BF2118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.m */; };
+		A7B679E02118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C02118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.m */; };
+		A7B679E12118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C12118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.m */; };
+		A7B679E22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m */; };
+		A7B679E32118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C42118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.m */; };
+		A7B679E42118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C62118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.m */; };
+		A7B679E52118498E00F7DAC1 /* UINavigationController+WXSTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C82118498E00F7DAC1 /* UINavigationController+WXSTransition.m */; };
+		A7B679E62118498E00F7DAC1 /* UIViewController+WXSTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679C92118498E00F7DAC1 /* UIViewController+WXSTransition.m */; };
+		A7B679E72118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679CB2118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.m */; };
+		A7B679E82118498E00F7DAC1 /* WXSTransitionManager+TypeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679CD2118498E00F7DAC1 /* WXSTransitionManager+TypeTool.m */; };
+		A7B679E92118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679CE2118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.m */; };
+		A7B679EA2118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679D02118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m */; };
+		A7B679EB2118498E00F7DAC1 /* WXSTransitionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679D12118498E00F7DAC1 /* WXSTransitionManager.m */; };
+		A7B679EC2118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679D62118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.m */; };
+		A7B679ED2118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679D82118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m */; };
+		A7B679EE2118498E00F7DAC1 /* WXSTransitionProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B679DA2118498E00F7DAC1 /* WXSTransitionProperty.m */; };
 		A7B9F7492111F42200F0949E /* TheCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B9F7482111F42200F0949E /* TheCardView.m */; };
 		A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7B9F74B2111F5AE00F0949E /* StartInterfaceController.m */; };
 /* End PBXBuildFile section */
@@ -66,6 +84,43 @@
 		A7AF123C210F46D000AAC40F /* BallView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BallView.m; sourceTree = "<group>"; };
 		A7B679022116F66700F7DAC1 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		A7B679032116F66700F7DAC1 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
+		A7B6791C211814BB00F7DAC1 /* ScoresViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScoresViewController.h; sourceTree = "<group>"; };
+		A7B6791D211814BB00F7DAC1 /* ScoresViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScoresViewController.m; sourceTree = "<group>"; };
+		A7B679BB2118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+CoverAnimation.h"; sourceTree = "<group>"; };
+		A7B679BC2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+SpreadAnimation.m"; sourceTree = "<group>"; };
+		A7B679BD2118498E00F7DAC1 /* WXSTransitionManager+TypeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+TypeTool.h"; sourceTree = "<group>"; };
+		A7B679BE2118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+SystermAnimation.h"; sourceTree = "<group>"; };
+		A7B679BF2118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+InsideThenPushAnimation.m"; sourceTree = "<group>"; };
+		A7B679C02118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+BoomAnimation.m"; sourceTree = "<group>"; };
+		A7B679C12118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+WXSTransitionProperty.m"; sourceTree = "<group>"; };
+		A7B679C22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+PageAnimation.m"; sourceTree = "<group>"; };
+		A7B679C32118498E00F7DAC1 /* WXSTransitionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSTransitionManager.h; sourceTree = "<group>"; };
+		A7B679C42118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+BrickAnimation.m"; sourceTree = "<group>"; };
+		A7B679C52118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+FragmentAnimation.h"; sourceTree = "<group>"; };
+		A7B679C62118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+FlipAnimation.m"; sourceTree = "<group>"; };
+		A7B679C72118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+ViewMoveAnimation.h"; sourceTree = "<group>"; };
+		A7B679C82118498E00F7DAC1 /* UINavigationController+WXSTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+WXSTransition.m"; sourceTree = "<group>"; };
+		A7B679C92118498E00F7DAC1 /* UIViewController+WXSTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+WXSTransition.m"; sourceTree = "<group>"; };
+		A7B679CA2118498E00F7DAC1 /* WXSTransitionProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSTransitionProperty.h; sourceTree = "<group>"; };
+		A7B679CB2118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSPercentDrivenInteractiveTransition.m; sourceTree = "<group>"; };
+		A7B679CC2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+SpreadAnimation.h"; sourceTree = "<group>"; };
+		A7B679CD2118498E00F7DAC1 /* WXSTransitionManager+TypeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+TypeTool.m"; sourceTree = "<group>"; };
+		A7B679CE2118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+CoverAnimation.m"; sourceTree = "<group>"; };
+		A7B679CF2118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+BrickAnimation.h"; sourceTree = "<group>"; };
+		A7B679D02118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+FragmentAnimation.m"; sourceTree = "<group>"; };
+		A7B679D12118498E00F7DAC1 /* WXSTransitionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSTransitionManager.m; sourceTree = "<group>"; };
+		A7B679D22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+PageAnimation.h"; sourceTree = "<group>"; };
+		A7B679D32118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+WXSTransitionProperty.h"; sourceTree = "<group>"; };
+		A7B679D42118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+InsideThenPushAnimation.h"; sourceTree = "<group>"; };
+		A7B679D52118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+BoomAnimation.h"; sourceTree = "<group>"; };
+		A7B679D62118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+SystermAnimation.m"; sourceTree = "<group>"; };
+		A7B679D72118498E00F7DAC1 /* UINavigationController+WXSTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+WXSTransition.h"; sourceTree = "<group>"; };
+		A7B679D82118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXSTransitionManager+ViewMoveAnimation.m"; sourceTree = "<group>"; };
+		A7B679D92118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXSTransitionManager+FlipAnimation.h"; sourceTree = "<group>"; };
+		A7B679DA2118498E00F7DAC1 /* WXSTransitionProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSTransitionProperty.m; sourceTree = "<group>"; };
+		A7B679DB2118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSPercentDrivenInteractiveTransition.h; sourceTree = "<group>"; };
+		A7B679DC2118498E00F7DAC1 /* UIViewController+WXSTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+WXSTransition.h"; sourceTree = "<group>"; };
+		A7B679DD2118498E00F7DAC1 /* WXSTypedefConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSTypedefConfig.h; sourceTree = "<group>"; };
 		A7B9F7472111F42200F0949E /* TheCardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TheCardView.h; sourceTree = "<group>"; };
 		A7B9F7482111F42200F0949E /* TheCardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TheCardView.m; sourceTree = "<group>"; };
 		A7B9F74A2111F5AE00F0949E /* StartInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StartInterfaceController.h; sourceTree = "<group>"; };
@@ -100,6 +155,7 @@
 		A7AF11402108C25900AAC40F = {
 			isa = PBXGroup;
 			children = (
+				A7B679BA2118498E00F7DAC1 /* WXSTransition */,
 				A7AF114B2108C25900AAC40F /* Ron's_first_game */,
 				A7AF11642108C25C00AAC40F /* Ron's_first_gameTests */,
 				A7AF116F2108C25C00AAC40F /* Ron's_first_gameUITests */,
@@ -175,6 +231,8 @@
 				A7AF11502108C25900AAC40F /* ViewController.m */,
 				A7B9F74A2111F5AE00F0949E /* StartInterfaceController.h */,
 				A7B9F74B2111F5AE00F0949E /* StartInterfaceController.m */,
+				A7B6791C211814BB00F7DAC1 /* ScoresViewController.h */,
+				A7B6791D211814BB00F7DAC1 /* ScoresViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -186,6 +244,48 @@
 				A7B679032116F66700F7DAC1 /* UserInfo.m */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		A7B679BA2118498E00F7DAC1 /* WXSTransition */ = {
+			isa = PBXGroup;
+			children = (
+				A7B679BB2118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.h */,
+				A7B679BC2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.m */,
+				A7B679BD2118498E00F7DAC1 /* WXSTransitionManager+TypeTool.h */,
+				A7B679BE2118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.h */,
+				A7B679BF2118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.m */,
+				A7B679C02118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.m */,
+				A7B679C12118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.m */,
+				A7B679C22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m */,
+				A7B679C32118498E00F7DAC1 /* WXSTransitionManager.h */,
+				A7B679C42118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.m */,
+				A7B679C52118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.h */,
+				A7B679C62118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.m */,
+				A7B679C72118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.h */,
+				A7B679C82118498E00F7DAC1 /* UINavigationController+WXSTransition.m */,
+				A7B679C92118498E00F7DAC1 /* UIViewController+WXSTransition.m */,
+				A7B679CA2118498E00F7DAC1 /* WXSTransitionProperty.h */,
+				A7B679CB2118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.m */,
+				A7B679CC2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.h */,
+				A7B679CD2118498E00F7DAC1 /* WXSTransitionManager+TypeTool.m */,
+				A7B679CE2118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.m */,
+				A7B679CF2118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.h */,
+				A7B679D02118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m */,
+				A7B679D12118498E00F7DAC1 /* WXSTransitionManager.m */,
+				A7B679D22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.h */,
+				A7B679D32118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.h */,
+				A7B679D42118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.h */,
+				A7B679D52118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.h */,
+				A7B679D62118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.m */,
+				A7B679D72118498E00F7DAC1 /* UINavigationController+WXSTransition.h */,
+				A7B679D82118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m */,
+				A7B679D92118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.h */,
+				A7B679DA2118498E00F7DAC1 /* WXSTransitionProperty.m */,
+				A7B679DB2118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.h */,
+				A7B679DC2118498E00F7DAC1 /* UIViewController+WXSTransition.h */,
+				A7B679DD2118498E00F7DAC1 /* WXSTypedefConfig.h */,
+			);
+			path = WXSTransition;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,15 +418,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7B679EA2118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m in Sources */,
 				A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */,
+				A7B679E22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m in Sources */,
+				A7B679E62118498E00F7DAC1 /* UIViewController+WXSTransition.m in Sources */,
+				A7B679ED2118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m in Sources */,
+				A7B6791E211814BB00F7DAC1 /* ScoresViewController.m in Sources */,
 				A7B679042116F66700F7DAC1 /* UserInfo.m in Sources */,
 				A7AF11512108C25900AAC40F /* ViewController.m in Sources */,
+				A7B679DE2118498E00F7DAC1 /* WXSTransitionManager+SpreadAnimation.m in Sources */,
 				A7AF121F210DC38F00AAC40F /* GroundView.m in Sources */,
+				A7B679EC2118498E00F7DAC1 /* WXSTransitionManager+SystermAnimation.m in Sources */,
+				A7B679EB2118498E00F7DAC1 /* WXSTransitionManager.m in Sources */,
 				A7AF123D210F46D000AAC40F /* BallView.m in Sources */,
+				A7B679E42118498E00F7DAC1 /* WXSTransitionManager+FlipAnimation.m in Sources */,
+				A7B679EE2118498E00F7DAC1 /* WXSTransitionProperty.m in Sources */,
 				A7AF115C2108C25C00AAC40F /* main.m in Sources */,
 				A7B9F7492111F42200F0949E /* TheCardView.m in Sources */,
 				A787730C2112F8EE00CAEB7B /* GlobalVariables.m in Sources */,
 				A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */,
+				A7B679E92118498E00F7DAC1 /* WXSTransitionManager+CoverAnimation.m in Sources */,
+				A7B679E72118498E00F7DAC1 /* WXSPercentDrivenInteractiveTransition.m in Sources */,
+				A7B679E12118498E00F7DAC1 /* UIViewController+WXSTransitionProperty.m in Sources */,
+				A7B679DF2118498E00F7DAC1 /* WXSTransitionManager+InsideThenPushAnimation.m in Sources */,
+				A7B679E32118498E00F7DAC1 /* WXSTransitionManager+BrickAnimation.m in Sources */,
+				A7B679E82118498E00F7DAC1 /* WXSTransitionManager+TypeTool.m in Sources */,
+				A7B679E02118498E00F7DAC1 /* WXSTransitionManager+BoomAnimation.m in Sources */,
+				A7B679E52118498E00F7DAC1 /* UINavigationController+WXSTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

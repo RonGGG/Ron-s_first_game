@@ -11,21 +11,21 @@
 #import "GroundView.h"
 #import "TheCardView.h"
 #import "UserInfo.h"
+#import "UINavigationController+WXSTransition.h"
 @interface ViewController ()
-@property (weak,nonatomic) UIView * ground_back;
-@property (weak,nonatomic) BallView * ball;
 
-//@property (assign,nonatomic) BOOL pause;
-@property (weak,nonatomic) UIButton * pause_btn;
-@property (weak,nonatomic) GroundView * firstGround;
-@property (weak,nonatomic) UIView * backView;
-@property (weak,nonatomic) UIView * clearBack;
-@property (weak,nonatomic) UILabel * points;
-
-@property (assign,nonatomic) CGFloat count;
-@property (strong,nonatomic) NSTimer * timer;
-
-@property (assign,nonatomic) CGFloat totalScores;
+/*UI属性*/
+@property (weak,nonatomic) UIView * ground_back;//groundView的背景(注意:这个view上子视图只能是groundview，因为他的subviews会动)
+@property (weak,nonatomic) BallView * ball;//球视图
+@property (weak,nonatomic) UIButton * pause_btn;//暂停按钮
+@property (weak,nonatomic) GroundView * firstGround;//元祖grund
+@property (weak,nonatomic) UIView * backView;//inset.top为safe area的背景view
+@property (weak,nonatomic) UIView * clearBack;//点击暂停时用来挡住ground，以不能对ground操作
+@property (weak,nonatomic) UILabel * points;//显示分数数字
+/*数据属性*/
+@property (assign,nonatomic) CGFloat totalScores;//当前的已得的分数
+@property (assign,nonatomic) CGFloat count;//未使用（为之后增加球的弹跳高度用）
+//@property (strong,nonatomic) NSTimer * timer;
 
 @end
 //safe area适配：
@@ -98,9 +98,17 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 }
 /*展示结束界面*/
 -(void)showEnd{
+    //做底层 view
+    UIView * backOfCard = [[UIView alloc]initWithFrame:self.view.frame];
+    backOfCard.backgroundColor = [UIColor blackColor];
+    backOfCard.layer.opacity = 0.8;
+    [self.view addSubview:backOfCard];
     //展示结束界面
-    TheCardView * card = [[TheCardView alloc]init];
+    TheCardView * card = [[TheCardView alloc] initWithScore:[NSString stringWithFormat:@"%ld",(NSInteger)self.totalScores]];
+//    card.score_str = ;
     card.block_PlayAgain = ^{
+        //移除背景
+        [backOfCard removeFromSuperview];
         //从groundBack中清空所有子视图
         for (GroundView * each_ground in self.ground_back.subviews) {
             [each_ground removeFromSuperview];
@@ -121,11 +129,14 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
         self.ball.center=tempPoint;
     } completion:^(BOOL finished) {
         if (finished) {
-            
+            if (!self.pause_btn.isSelected) {
+                [self.ball.layer removeAllAnimations];
+                return ;
+            }
             if ([self check_gameover]) {//查看球是否游戏结束
                 //比较分数
-                if (((NSInteger)self.totalScores) > [UserInfo sharedUser].scores) {
-                    [UserInfo sharedUser].scores = self.totalScores;
+                if (((NSInteger)self.totalScores) > [UserInfo sharedUser].highestScore) {
+                    [UserInfo sharedUser].highestScore = self.totalScores;
                 }
                 //这里做游戏结束处理：
                 [self.ball.layer removeAllAnimations];
@@ -145,6 +156,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
                     self.ball.center=tempPoint;
                 } completion:^(BOOL finished) {
                     if (finished) {
+                        if (!self.pause_btn.isSelected) {
+                            [self.ball.layer removeAllAnimations];
+                            return ;
+                        }
                         [self ballAnimationWithDuration:duratoin andBounceHeight:height];
                     }
                 }];
@@ -154,8 +169,8 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
         }
     }];
 }
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     //开始游戏
     [self startGameWithDuration:0.5+self.count/100 andBounceHeight:60];
 }
@@ -172,11 +187,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 //    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
 //    self.timer = timer;
 //    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-//    self.pause = NO;
     //BackView
     UIView * backView = [[UIView alloc]init];
     self.backView = backView;
-    backView.backgroundColor = [UIColor yellowColor];
+//    backView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:backView];
     //ground的背景
     UIView * ground_background = [[UIView alloc]initWithFrame:self.view.frame];
@@ -191,33 +205,39 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self.backView addSubview:ball];
     //Go Back to StartInterface:
     UIButton * goBack = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
-    goBack.backgroundColor = [UIColor redColor];
-    [goBack setTitle:@"Back" forState:UIControlStateNormal];
+//    goBack.backgroundColor = [UIColor redColor];
+//    [goBack setTitle:@"Back" forState:UIControlStateNormal];
+//    UIImage * goback_img = [self originImage:[UIImage imageNamed:@"go_back_left2"] scaleToSize:CGSizeMake(40, 40)];
+    [goBack setImage:[UIImage imageNamed:@"go_back_left"] forState:UIControlStateNormal];
     [goBack addTarget:self action:@selector(goBackTo_startInterface) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:goBack];
     //Pause:
-    UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(goBack.frame.origin.x+goBack.frame.size.width+20, goBack.frame.origin.y, 100, 50)];
+    UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(goBack.frame.origin.x+goBack.frame.size.width+20, goBack.frame.origin.y, 50, 50)];
     self.pause_btn = pause;
     [pause setSelected:NO];
-    pause.backgroundColor = [UIColor redColor];
-    pause.titleLabel.font =  [UIFont fontWithName:@"PingFangSC-Regular" size:20];
-    pause.titleLabel.textColor =  [UIColor blackColor];
+//    pause.backgroundColor = [UIColor redColor];
+//    pause.titleLabel.font =  [UIFont fontWithName:@"PingFangSC-Regular" size:20];
+//    pause.titleLabel.textColor =  [UIColor blackColor];
     
-    [pause setTitle:@"Begin" forState:UIControlStateNormal];
-    [pause setTitle:@"End" forState:UIControlStateSelected];
+    [pause setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [pause setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateSelected];
+//    [pause setTitle:@"Begin" forState:UIControlStateNormal];
+//    [pause setTitle:@"End" forState:UIControlStateSelected];
     [pause addTarget:self action:@selector(clickPause:) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:pause];
     //Scores:
-    CGFloat suf_wid = 60;
-    UILabel * suffix = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-suf_wid-10, 0, suf_wid, 50)];
+    CGFloat suf_wid = 80;
+    UILabel * suffix = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-suf_wid-10, 10, suf_wid, 50)];
     suffix.textAlignment = NSTextAlignmentCenter;
+    suffix.font = [UIFont fontWithName:@"MarkerFelt-Thin" size:25];
     suffix.textColor = [UIColor blackColor];
     suffix.text = @"points";
     [self.backView addSubview:suffix];
     
     CGFloat pointsWid = SCREEN_WIDTH-(pause.frame.origin.x+pause.frame.size.width+10)-suf_wid-10;
-    UILabel * points = [[UILabel alloc]initWithFrame:CGRectMake(pause.frame.origin.x+pause.frame.size.width+10, 0, pointsWid, 50)];
+    UILabel * points = [[UILabel alloc]initWithFrame:CGRectMake(pause.frame.origin.x+pause.frame.size.width+10, 10, pointsWid, 50)];
     self.points = points;
+    points.font = [UIFont fontWithName:@"MarkerFelt-Thin" size:25];
     points.textAlignment = NSTextAlignmentRight;
     points.textColor = [UIColor blackColor];
     points.text = @"0";
@@ -281,14 +301,13 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)clickPause:(id)sender{
     UIButton * btn = (UIButton*)sender;
     if (btn.isSelected) {//show"pause"
-//        self.pause = YES;
         [self stopGame];
+        
         UIView * clearBack = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-GROUND_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT)];
         self.clearBack = clearBack;
         clearBack.backgroundColor = [UIColor clearColor];
         [self.view addSubview:clearBack];
     }else{//show"begin"
-//        self.pause = NO;
         if (self.clearBack) {
             [self.clearBack removeFromSuperview];
         }
@@ -331,13 +350,20 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)stopGame{
     //停止游戏
     [self.pause_btn setSelected:NO];
-    [self.ball.layer removeAllAnimations];
+//    [self.ball.layer removeAllAnimations];
 }
 //返回Start界面
 -(void)goBackTo_startInterface{
-    
-    [self dismissViewControllerAnimated:NO completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];
+}
+//重置image大小：
+-(UIImage*) originImage:(UIImage*)image scaleToSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage * currentImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return currentImg;
 }
 @end

@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface TheCardView : UIView
+-(instancetype)initWithScore:(NSString*)score;
+//block:点击playagain回调
 @property void (^block_PlayAgain)(void);
+//当前分数
+@property (nonatomic,strong) NSString * score_str;
 @end
