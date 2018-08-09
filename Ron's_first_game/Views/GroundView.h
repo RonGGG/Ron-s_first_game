@@ -23,4 +23,5 @@
 /*block:ground滚动回调*/
 @property void (^block_GestureStateChanged)(GroundView * view,CGPoint position,UIPanGestureRecognizer* sender);
 @property void (^block_GestureStateBegin)(GroundView * view,CGPoint position,UIPanGestureRecognizer * sender);
+@property void (^block_GestureStateEnd)(GroundView * view,CGPoint position,UIPanGestureRecognizer * sender);
 @end

@@ -25,6 +25,8 @@
 /*数据属性*/
 @property (assign,nonatomic) CGFloat totalScores;//当前的已得的分数
 @property (assign,nonatomic) CGFloat count;//未使用（为之后增加球的弹跳高度用）
+@property (weak,nonatomic) UIPanGestureRecognizer * currentGes;//当前触摸手势
+//@property (assign,nonatomic) BOOL gesture_lock;//手势锁，1为已上锁，0为未上锁
 //@property (strong,nonatomic) NSTimer * timer;
 
 @end
@@ -184,6 +186,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     self.view.backgroundColor = [UIColor whiteColor];
     //初始化当前控制器各种成员变量
     self.count = 0;
+//    self.gesture_lock = NO;
 //    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
 //    self.timer = timer;
 //    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
@@ -262,6 +265,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     ground.block_GestureStateChanged = ^(GroundView *view, CGPoint position, UIPanGestureRecognizer *sender) {
         [self gestureStateChanged:view andPoint:position andGesture:sender];
     };
+    //手势回调block
+    ground.block_GestureStateEnd = ^(GroundView *view, CGPoint position, UIPanGestureRecognizer *sender) {
+        [self gestureStateEnd:view andPoint:position andGesture:sender];
+    };
     [self.ground_back addSubview:ground];
     
     CGFloat positoin;
@@ -292,6 +299,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     ground_new.block_GestureStateChanged = ^(GroundView *view, CGPoint position, UIPanGestureRecognizer *sender) {
         [self gestureStateChanged:view andPoint:position andGesture:sender];
     };
+    //手势回调block
+    ground_new.block_GestureStateEnd = ^(GroundView *view, CGPoint position, UIPanGestureRecognizer *sender) {
+        [self gestureStateEnd:view andPoint:position andGesture:sender];
+    };
     CGFloat positoin;
     if ((positoin = [ground_new ground_check])!=0) {
         [self createGround:x];
@@ -316,28 +327,41 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 }
 /*手势statebegin调用方法*/
 -(void)gestureStateBegin:(GroundView *)ground andPoint:(CGPoint)point andGesture:(UIPanGestureRecognizer*)sender{
-    //第一次触摸view的点和view中心点的x方向的位移
-    ground.move_x = point.x-sender.view.center.x;
-    NSLog(@"First touch move: %f",ground.move_x);
+    NSLog(@"UIPanGestureRecognizer:%@",sender);
+    if (self.currentGes==nil) {
+        self.currentGes = sender;
+        //第一次触摸view的点和view中心点的x方向的位移
+        ground.move_x = point.x-sender.view.center.x;
+        NSLog(@"First touch move: %f",ground.move_x);
+    }
 }
 /*手势statechanged回调方法*/
 -(void)gestureStateChanged:(GroundView *)ground andPoint:(CGPoint)point andGesture:(UIPanGestureRecognizer*)sender{
-    //通过手势位置，计算出当前view的center
-    point = CGPointMake(point.x-ground.move_x, ground.frame.origin.y+GROUND_HEIGHT/2);
-    //得到两点之间位移(move>0:右移 move:<0:左移)
-    CGFloat move = point.x-sender.view.center.x;
-    //约束第一个ground的左边界
-    CGRect frame = self.firstGround.frame;
-    if (frame.origin.x+move<0) {
-        //更改所有view的x变量以达到整体移动的效果
-        for (GroundView * view in ground.superview.subviews) {
-            if (view!=ground) {
-                CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
-                view.center = viewCenter;
+    NSLog(@"UIPanGestureRecognizer:%@",sender);
+    if (sender==self.currentGes) {
+        //通过手势位置，计算出当前view的center
+        point = CGPointMake(point.x-ground.move_x, ground.frame.origin.y+GROUND_HEIGHT/2);
+        //得到两点之间位移(move>0:右移 move:<0:左移)
+        CGFloat move = point.x-sender.view.center.x;
+        //约束第一个ground的左边界
+        CGRect frame = self.firstGround.frame;
+        if (frame.origin.x+move<0) {
+            //更改所有view的x变量以达到整体移动的效果
+            for (GroundView * view in ground.superview.subviews) {
+                if (view!=ground) {
+                    CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
+                    view.center = viewCenter;
+                }
             }
+            //更改center
+            sender.view.center = point;
         }
-        //更改center
-        sender.view.center = point;
+    }
+}
+/*手势stateEnd回调方法*/
+-(void)gestureStateEnd:(GroundView *)ground andPoint:(CGPoint)point andGesture:(UIPanGestureRecognizer*)sender{
+    if (sender==self.currentGes) {
+        self.currentGes = nil;
     }
 }
 //开始游戏调用

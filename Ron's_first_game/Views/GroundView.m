@@ -46,6 +46,8 @@
         self.userInteractionEnabled = YES;
         //手势初始化
         UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panFunc:)];
+        pan.minimumNumberOfTouches = 1;
+        pan.maximumNumberOfTouches = 1;
         [self addGestureRecognizer:pan];
     }
     
@@ -76,6 +78,10 @@
 //            NSLog(@"*UIGestureRecognizerStateChanged*");
             //回调block
             self.block_GestureStateChanged(self,point,sender);
+            break;
+        }
+        case UIGestureRecognizerStateEnded:{
+            self.block_GestureStateEnd(self,point,sender);
             break;
         }
         default:
