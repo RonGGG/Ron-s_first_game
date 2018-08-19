@@ -10,6 +10,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property void (^block_applicationWillResignActive)(void);
 @end
 

@@ -12,8 +12,9 @@
 #import "TheCardView.h"
 #import "UserInfo.h"
 #import "UINavigationController+WXSTransition.h"
-@interface ViewController ()
 
+#import "AppDelegate.h"
+@interface ViewController ()
 /*UI属性*/
 @property (weak,nonatomic) UIView * ground_back;//groundView的背景(注意:这个view上子视图只能是groundview，因为他的subviews会动)
 @property (weak,nonatomic) BallView * ball;//球视图
@@ -176,6 +177,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //开始游戏
     [self startGameWithDuration:0.5+self.count/100 andBounceHeight:60];
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    NSLog(@"viewWillDisappear");
+}
 -(void)timer:(id)sender{
     self.count+=10;
     NSLog(@"Cunt: %f",self.count);
@@ -186,6 +191,14 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     self.view.backgroundColor = [UIColor whiteColor];
     //初始化当前控制器各种成员变量
     self.count = 0;
+    AppDelegate * appdelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    appdelegate.block_applicationWillResignActive = ^{
+        //比较分数
+        if (((NSInteger)self.totalScores) > [UserInfo sharedUser].highestScore) {
+            [UserInfo sharedUser].highestScore = self.totalScores;
+        }
+        [self stopGame];
+    };
 //    self.gesture_lock = NO;
 //    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(timer:) userInfo:nil repeats:YES];
 //    self.timer = timer;
@@ -378,6 +391,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 }
 //返回Start界面
 -(void)goBackTo_startInterface{
+    //比较分数
+    if (((NSInteger)self.totalScores) > [UserInfo sharedUser].highestScore) {
+        [UserInfo sharedUser].highestScore = self.totalScores;
+    }
     [self dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];

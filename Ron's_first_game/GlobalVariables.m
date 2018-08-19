@@ -11,4 +11,5 @@
 @implementation GlobalVariables
 
 NSString * const machineType = @"machineType";
+NSString * const storeUserKey = @"storeUser";
 @end

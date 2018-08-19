@@ -25,6 +25,10 @@
 @property (assign,nonatomic) BOOL isMale;
 @property (assign,nonatomic) NSInteger highestScore;
 
-
+//返回用户单例：
 +(UserInfo *)sharedUser;
+//保存用户信息到磁盘
++(void)saveAccount;
+//从磁盘读取用户信息
++(void)readAccount;
 @end

@@ -50,7 +50,6 @@
         pan.maximumNumberOfTouches = 1;
         [self addGestureRecognizer:pan];
     }
-    
     return self;
 }
 /*init就是x为0的初始化*/

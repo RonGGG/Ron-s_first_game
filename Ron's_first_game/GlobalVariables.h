@@ -12,5 +12,6 @@
 //NSString * const machineType;
 {
     NSString * const machineType;
+    NSString * const storeUserKey;
 }
 @end
