@@ -59,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A76BE204212943B600EFE4B8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A787730A2112F8EE00CAEB7B /* GlobalVariables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalVariables.h; sourceTree = "<group>"; };
 		A787730B2112F8EE00CAEB7B /* GlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalVariables.m; sourceTree = "<group>"; };
 		A7AF11492108C25900AAC40F /* Ron's_first_game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ron's_first_game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +156,7 @@
 		A7AF11402108C25900AAC40F = {
 			isa = PBXGroup;
 			children = (
+				A76BE204212943B600EFE4B8 /* README.md */,
 				A7B679BA2118498E00F7DAC1 /* WXSTransition */,
 				A7AF114B2108C25900AAC40F /* Ron's_first_game */,
 				A7AF11642108C25C00AAC40F /* Ron's_first_gameTests */,

@@ -91,6 +91,7 @@
 -(CGFloat)ground_check{
     CGRect lastObj_frame = self.superview.subviews.lastObject.frame;
     if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP<=SCREEN_WIDTH) {
+//        NSLog(@"lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP:%f",lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP);
         return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP;
     }
     return 0;

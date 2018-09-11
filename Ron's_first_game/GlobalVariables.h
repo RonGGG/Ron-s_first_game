@@ -13,5 +13,8 @@
 {
     NSString * const machineType;
     NSString * const storeUserKey;
+    //游戏难度标示：
+    NSInteger level;
 }
+
 @end

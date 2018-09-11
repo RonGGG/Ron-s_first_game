@@ -96,18 +96,20 @@
     return self;
 }
 -(void)playAgain:(UIButton*)sender{
-    self.block_PlayAgain();
-    [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.card.frame = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
-        //        self.layer.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH/2, CARD_HEIGHT/2);
-        self.playAgain.frame = CGRectMake(0, 0, 0, 0);
-        self.score.frame = CGRectMake(0, 0, 0, 0);
-    } completion:^(BOOL finished) {
-        if (finished) {
-            self.show = NO;
-            [self removeFromSuperview];
-        }
-    }];
+    if (self.show) {
+        self.block_PlayAgain();
+        [UIView animateWithDuration:0.2 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.card.frame = CGRectMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0, 0);
+            //        self.layer.frame = CGRectMake((SCREEN_WIDTH-CARD_WIDTH)/2, (SCREEN_HEIGHT-CARD_HEIGHT)/2, CARD_WIDTH/2, CARD_HEIGHT/2);
+            self.playAgain.frame = CGRectMake(0, 0, 0, 0);
+            self.score.frame = CGRectMake(0, 0, 0, 0);
+        } completion:^(BOOL finished) {
+            if (finished) {
+                self.show = NO;
+                [self removeFromSuperview];
+            }
+        }];
+    }
 }
 - (void)layoutSubviews{
     [super layoutSubviews];

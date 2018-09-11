@@ -21,15 +21,20 @@
 @property (weak,nonatomic) UIButton * pause_btn;//暂停按钮
 @property (weak,nonatomic) GroundView * firstGround;//元祖grund
 @property (weak,nonatomic) UIView * backView;//inset.top为safe area的背景view
-@property (weak,nonatomic) UIView * clearBack;//点击暂停时用来挡住ground，以不能对ground操作
+//@property (weak,nonatomic) UIView * clearBack;//点击暂停时用来挡住ground，以不能对ground操作
 @property (weak,nonatomic) UILabel * points;//显示分数数字
 /*数据属性*/
 @property (assign,nonatomic) CGFloat totalScores;//当前的已得的分数
 @property (assign,nonatomic) CGFloat count;//未使用（为之后增加球的弹跳高度用）
 @property (weak,nonatomic) UIPanGestureRecognizer * currentGes;//当前触摸手势
+
+@property (assign,nonatomic) CGFloat lastTouch_groundBack;
+
 //@property (assign,nonatomic) BOOL gesture_lock;//手势锁，1为已上锁，0为未上锁
 //@property (strong,nonatomic) NSTimer * timer;
 
+/*引用属性*/
+extern NSInteger level;
 @end
 //safe area适配：
 static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
@@ -213,6 +218,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     self.ground_back = ground_background;
     ground_background.backgroundColor = [UIColor clearColor];
     [self.backView addSubview:ground_background];
+    UIPanGestureRecognizer * panOneGroundBack = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panOnGroundBack:)];
+    panOneGroundBack.minimumNumberOfTouches = 1;
+    panOneGroundBack.maximumNumberOfTouches = 1;
+    [ground_background addGestureRecognizer:panOneGroundBack];
     //创建元祖ground方法
     [self createInitGround];
     //Ball
@@ -221,9 +230,6 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self.backView addSubview:ball];
     //Go Back to StartInterface:
     UIButton * goBack = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
-//    goBack.backgroundColor = [UIColor redColor];
-//    [goBack setTitle:@"Back" forState:UIControlStateNormal];
-//    UIImage * goback_img = [self originImage:[UIImage imageNamed:@"go_back_left2"] scaleToSize:CGSizeMake(40, 40)];
     [goBack setImage:[UIImage imageNamed:@"go_back_left"] forState:UIControlStateNormal];
     [goBack addTarget:self action:@selector(goBackTo_startInterface) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:goBack];
@@ -231,14 +237,8 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     UIButton * pause = [[UIButton alloc]initWithFrame:CGRectMake(goBack.frame.origin.x+goBack.frame.size.width+20, goBack.frame.origin.y, 50, 50)];
     self.pause_btn = pause;
     [pause setSelected:NO];
-//    pause.backgroundColor = [UIColor redColor];
-//    pause.titleLabel.font =  [UIFont fontWithName:@"PingFangSC-Regular" size:20];
-//    pause.titleLabel.textColor =  [UIColor blackColor];
-    
     [pause setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [pause setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateSelected];
-//    [pause setTitle:@"Begin" forState:UIControlStateNormal];
-//    [pause setTitle:@"End" forState:UIControlStateSelected];
     [pause addTarget:self action:@selector(clickPause:) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:pause];
     //Scores:
@@ -292,9 +292,15 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 /*创建新的ground*/
 -(void)createGround:(CGFloat)x{
     //每次生成新的view都要打印所有的views
-    NSLog(@"subviews:%@ count:%ld",self.ground_back.subviews,self.ground_back.subviews.count);
+    NSLog(@"subviews count:%ld",self.ground_back.subviews.count);
+    
     //递归ground
     GroundView * ground_new = [[GroundView alloc]initWithRandom:x];
+    //检查游戏难度：
+    if ([self checkLevel]) {
+        [self updateGameLevel];//更新游戏难度
+    }
+    [self doSomethingWhenCreating:ground_new];
     //得到每次新生成的ground的宽度
 //    CGFloat widOfGround = ground_new.frame.size.width;
     //表示球没有在这个ground上落过
@@ -326,15 +332,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     UIButton * btn = (UIButton*)sender;
     if (btn.isSelected) {//show"pause"
         [self stopGame];
-        
-        UIView * clearBack = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-GROUND_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT)];
-        self.clearBack = clearBack;
-        clearBack.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:clearBack];
+        //暂停不可以操作ground
+        self.ground_back.userInteractionEnabled = NO;
     }else{//show"begin"
-        if (self.clearBack) {
-            [self.clearBack removeFromSuperview];
-        }
+        //可以操作ground
+        self.ground_back.userInteractionEnabled = YES;
         [self startGameWithDuration:0.5 andBounceHeight:60];
     }
 }
@@ -398,6 +400,75 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];
+}
+-(void)panOnGroundBack:(UIPanGestureRecognizer * )sender{
+    //查看是否需要生成新的ground
+    CGFloat position;
+    if ((position = [self ground_check])!=0) {
+        //生成新的ground
+        [self createGround:position];
+    }
+    //手指坐标
+    CGPoint point = [sender locationInView:self.view];
+//    NSLog(@"point: (%f,%f)",point.x,point.y);
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan:{
+//            NSLog(@"*UIGestureRecognizerStateBegan*");
+            //第一次触摸view的点和view中心点的x方向的位移
+            self.lastTouch_groundBack = point.x;
+            break;
+        }
+        case UIGestureRecognizerStateChanged:{
+//            NSLog(@"*UIGestureRecognizerStateChanged*");
+            //得到两点之间位移(move>0:右移 move:<0:左移)
+            CGFloat move = point.x-self.lastTouch_groundBack;
+            self.lastTouch_groundBack = point.x;
+            //约束第一个ground的左边界
+            CGRect frame = self.firstGround.frame;
+            if (frame.origin.x+move<0) {
+                //更改所有view的x变量以达到整体移动的效果
+                for (GroundView * view in self.ground_back.subviews) {
+                    CGPoint viewCenter = CGPointMake(view.center.x+move, view.center.y);
+                    view.center = viewCenter;
+                }
+            }
+            break;
+        }
+        case UIGestureRecognizerStateEnded:{
+            
+            break;
+        }
+        default:
+            break;
+    }
+}
+/*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
+-(CGFloat)ground_check{
+    CGRect lastObj_frame = self.ground_back.subviews.lastObject.frame;
+    if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP<=SCREEN_WIDTH) {
+        return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP;
+    }
+    return 0;
+}
+//检查游戏难度:
+-(BOOL)checkLevel{
+    NSLog(@"total&level:%f %ld",self.totalScores,level);
+    if (self.totalScores > 1000*(level+1)) {
+        return YES;
+    }
+    return NO;
+}
+//更新游戏难度:
+-(void)updateGameLevel{
+    level+=1;
+//    for (GroundView * view in self.ground_back.subviews) {
+//        view.backgroundColor = [UIColor greenColor];
+//    }
+}
+//创建新的ground时调用
+-(void)doSomethingWhenCreating:(GroundView *)ground_new{
+    
+//    ground_new.backgroundColor = [UIColor colorWithRed:255/255.0 green:0 blue:0 alpha:1.0];
 }
 //重置image大小：
 -(UIImage*) originImage:(UIImage*)image scaleToSize:(CGSize)size{
