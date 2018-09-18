@@ -21,6 +21,16 @@
         }
     }
 }
+/*生成随机gap*/
+-(CGFloat)randomGap{
+    uint32_t wid;
+    while (1) {
+        wid = arc4random_uniform(SCREEN_WIDTH*2/3);
+        if (wid>=BALL_DIAMETER/3) {
+            return (CGFloat)wid;
+        }
+    }
+}
 /*自定义带frame的初始化：(只能自定义x和宽度)*/
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
@@ -29,8 +39,11 @@
         self.backgroundColor = [UIColor darkGrayColor];
         self.layer.masksToBounds = YES;
         self.userInteractionEnabled = YES;
+        self.behind_gap = [self randomGap];   //得到一个behind_gap随机数
         //手势初始化
         UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panFunc:)];
+        pan.minimumNumberOfTouches = 1;
+        pan.maximumNumberOfTouches = 1;
         [self addGestureRecognizer:pan];
     }
     
@@ -44,6 +57,7 @@
         self.backgroundColor = [UIColor darkGrayColor];
         self.layer.masksToBounds = YES;
         self.userInteractionEnabled = YES;
+        self.behind_gap = [self randomGap];   //得到一个behind_gap随机数
         //手势初始化
         UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(panFunc:)];
         pan.minimumNumberOfTouches = 1;
@@ -90,9 +104,8 @@
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
 -(CGFloat)ground_check{
     CGRect lastObj_frame = self.superview.subviews.lastObject.frame;
-    if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP<=SCREEN_WIDTH) {
-//        NSLog(@"lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP:%f",lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP);
-        return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP;
+    if (lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap<=SCREEN_WIDTH) {
+        return lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap;
     }
     return 0;
 }

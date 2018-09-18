@@ -25,7 +25,8 @@
 @property (weak,nonatomic) UILabel * points;//显示分数数字
 /*数据属性*/
 @property (assign,nonatomic) CGFloat totalScores;//当前的已得的分数
-@property (assign,nonatomic) CGFloat count;//未使用（为之后增加球的弹跳高度用）
+@property (assign,nonatomic) CGFloat duration;//球跳跃的时间间隙 初始化为0.5
+//@property (assign,nonatomic) CGFloat count;//未使用（为之后增加球的弹跳高度用）
 @property (weak,nonatomic) UIPanGestureRecognizer * currentGes;//当前触摸手势
 
 @property (assign,nonatomic) CGFloat lastTouch_groundBack;
@@ -97,7 +98,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //检查球是否掉下去
     if (self.ball.center.y==SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2) {//球已到最低点
         for (GroundView * view in self.ground_back.subviews) {
-            if (view.frame.origin.x-GROUND_GAP<SCREEN_WIDTH/2 && view.frame.origin.x>SCREEN_WIDTH/2) {
+            if (view.frame.origin.x-view.front_gap<SCREEN_WIDTH/2 && view.frame.origin.x>SCREEN_WIDTH/2) {
                 return YES;
             }
         }
@@ -129,11 +130,10 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self.view addSubview:card];
 }
 /*球动画方法*/
--(void)ballAnimationWithDuration:(NSTimeInterval)duratoin andBounceHeight:(CGFloat)height{
-    [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-//        CGPoint tempPoint=self.ball.center;
+-(void)ballAnimationWithDuration:(NSTimeInterval)duration andBounceHeight:(CGFloat)height{
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         CGPoint tempPoint = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2-height);
-        tempPoint.y += height+self.count;
+        tempPoint.y += height;
         self.ball.center=tempPoint;
     } completion:^(BOOL finished) {
         if (finished) {
@@ -157,10 +157,9 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
                 //计算分数
                 [self calculate_scores];
                 
-                [UIView animateWithDuration:duratoin delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//                    CGPoint tempPoint=self.ball.center;
+                [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     CGPoint tempPoint = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2);
-                    tempPoint.y -= (height+self.count);
+                    tempPoint.y -= (height);
                     self.ball.center=tempPoint;
                 } completion:^(BOOL finished) {
                     if (finished) {
@@ -168,34 +167,40 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
                             [self.ball.layer removeAllAnimations];
                             return ;
                         }
-                        [self ballAnimationWithDuration:duratoin andBounceHeight:height];
+//                        CGFloat levelFloat = level;
+//                        if (level<5) {
+//                            self.duration = self.duration-levelFloat/10;
+//                        }else{
+//                            self.duration = self.duration-0.4;
+//                        }
+                        [self ballAnimationWithDuration:duration andBounceHeight:height];
+//                        NSLog(@"Level&Duration %ld %f",level,self.duration);
                     }
                 }];
             }
-//            NSLog(@"**Totals:%f",self.totalScores);
-//            NSLog(@"**User score:%ld",[UserInfo sharedUser].scores);
         }
     }];
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     //开始游戏
-    [self startGameWithDuration:0.5+self.count/100 andBounceHeight:60];
+    [self startGameWithDuration:self.duration andBounceHeight:60];
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     NSLog(@"viewWillDisappear");
 }
--(void)timer:(id)sender{
-    self.count+=10;
-    NSLog(@"Cunt: %f",self.count);
-}
+//-(void)timer:(id)sender{
+//    self.count+=10;
+//    NSLog(@"Cunt: %f",self.count);
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     //设置当前控制器的属性
     self.view.backgroundColor = [UIColor whiteColor];
     //初始化当前控制器各种成员变量
-    self.count = 0;
+//    self.count = 0;
+    self.duration = 0.5;
     AppDelegate * appdelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
     appdelegate.block_applicationWillResignActive = ^{
         //比较分数
@@ -266,7 +271,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
     self.firstGround = ground;
     self.totalScores = 0;  //新一轮游戏需要置零记分器
-    ground.hasLanded = NO;//只有元祖ground才是yes
+    ground.hasLanded = NO;
     ground.createNewGround = ^(CGFloat x_of_new) {
         [self createGround:x_of_new];
     };
@@ -296,6 +301,9 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     
     //递归ground
     GroundView * ground_new = [[GroundView alloc]initWithRandom:x];
+    //设置ground的属性(将最后一个ground后的gap赋值给新创建的groundnew的frontgap)
+    GroundView * pre = self.ground_back.subviews.lastObject;
+    ground_new.front_gap = pre.behind_gap;
     //检查游戏难度：
     if ([self checkLevel]) {
         [self updateGameLevel];//更新游戏难度
@@ -442,17 +450,19 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
             break;
     }
 }
+
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
 -(CGFloat)ground_check{
-    CGRect lastObj_frame = self.ground_back.subviews.lastObject.frame;
-    if (lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP<=SCREEN_WIDTH) {
-        return lastObj_frame.origin.x+lastObj_frame.size.width+GROUND_GAP;
+    GroundView * last_ground = self.ground_back.subviews.lastObject;
+    CGRect lastObj_frame = last_ground.frame;
+    if (lastObj_frame.origin.x+lastObj_frame.size.width+last_ground.behind_gap<=SCREEN_WIDTH) {
+        return lastObj_frame.origin.x+lastObj_frame.size.width+last_ground.behind_gap;
     }
     return 0;
 }
 //检查游戏难度:
 -(BOOL)checkLevel{
-    NSLog(@"total&level:%f %ld",self.totalScores,level);
+//    NSLog(@"total&level:%f  %ld",self.totalScores,level);
     if (self.totalScores > 1000*(level+1)) {
         return YES;
     }
@@ -461,14 +471,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 //更新游戏难度:
 -(void)updateGameLevel{
     level+=1;
-//    for (GroundView * view in self.ground_back.subviews) {
-//        view.backgroundColor = [UIColor greenColor];
-//    }
+    NSLog(@"Level:%ld",level);
 }
 //创建新的ground时调用
 -(void)doSomethingWhenCreating:(GroundView *)ground_new{
     
-//    ground_new.backgroundColor = [UIColor colorWithRed:255/255.0 green:0 blue:0 alpha:1.0];
 }
 //重置image大小：
 -(UIImage*) originImage:(UIImage*)image scaleToSize:(CGSize)size{

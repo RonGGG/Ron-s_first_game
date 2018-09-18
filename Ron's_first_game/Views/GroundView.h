@@ -13,6 +13,13 @@
 @property (assign,nonatomic) BOOL hasLanded;
 /*第一次触摸点和中心点之间的x方向的位移*/
 @property (assign,nonatomic) CGFloat move_x;
+/*ground前的gap 用来判断球是否掉落*/
+@property (assign,nonatomic) CGFloat front_gap;
+/*ground后的gap 也就是在生成前一个ground的时候 后面gap的随机值已经确定了*/
+@property (assign,nonatomic) CGFloat behind_gap;
+
+
+
 /*该方法用于初始化view，参数x是view的x*/
 -(instancetype)initWithRandom:(CGFloat)x;
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
