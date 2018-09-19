@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F0877B1215207F10033AD6E /* ChangSkinView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F0877B0215207F10033AD6E /* ChangSkinView.m */; };
 		A787730C2112F8EE00CAEB7B /* GlobalVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = A787730B2112F8EE00CAEB7B /* GlobalVariables.m */; };
 		A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF114D2108C25900AAC40F /* AppDelegate.m */; };
 		A7AF11512108C25900AAC40F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11502108C25900AAC40F /* ViewController.m */; };
@@ -59,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F0877AF215207F10033AD6E /* ChangSkinView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangSkinView.h; sourceTree = "<group>"; };
+		7F0877B0215207F10033AD6E /* ChangSkinView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChangSkinView.m; sourceTree = "<group>"; };
 		A76BE204212943B600EFE4B8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A787730A2112F8EE00CAEB7B /* GlobalVariables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalVariables.h; sourceTree = "<group>"; };
 		A787730B2112F8EE00CAEB7B /* GlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalVariables.m; sourceTree = "<group>"; };
@@ -222,6 +225,8 @@
 				A7AF123C210F46D000AAC40F /* BallView.m */,
 				A7B9F7472111F42200F0949E /* TheCardView.h */,
 				A7B9F7482111F42200F0949E /* TheCardView.m */,
+				7F0877AF215207F10033AD6E /* ChangSkinView.h */,
+				7F0877B0215207F10033AD6E /* ChangSkinView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -423,6 +428,7 @@
 				A7B679EA2118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m in Sources */,
 				A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */,
 				A7B679E22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m in Sources */,
+				7F0877B1215207F10033AD6E /* ChangSkinView.m in Sources */,
 				A7B679E62118498E00F7DAC1 /* UIViewController+WXSTransition.m in Sources */,
 				A7B679ED2118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m in Sources */,
 				A7B6791E211814BB00F7DAC1 /* ScoresViewController.m in Sources */,

@@ -11,8 +11,12 @@
 #import "ScoresViewController.h"
 #import "UserInfo.h"
 #import "UINavigationController+WXSTransition.h"
+#import "ChangSkinView.h"
 @interface StartInterfaceController ()
-
+/*View*/
+@property (weak,nonatomic) ChangSkinView * changeSkinView;
+/*属性*/
+@property (assign,nonatomic) BOOL changeBeShown;
 @end
 
 @implementation StartInterfaceController
@@ -24,6 +28,7 @@
     [UserInfo sharedUser].isMale = YES;
     //设置当前view的属性
     self.view.backgroundColor = [UIColor whiteColor];
+    self.changeBeShown = NO;
     //开始游戏按钮：
     UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-10)/2, SCREEN_HEIGHT/4*3, SCREEN_WIDTH-150, 70)];
     btn.tag = 0;
@@ -47,6 +52,25 @@
     checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
     [checkScores addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:checkScores];
+    //更换主题按钮L：
+    CGFloat wid = SCREEN_WIDTH;
+    ChangSkinView * changeSkin_back = [[ChangSkinView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-60, wid, SCREEN_HEIGHT)];
+    self.changeSkinView = changeSkin_back;
+    changeSkin_back.backgroundColor = [UIColor blackColor];
+    changeSkin_back.layer.cornerRadius = 18;
+    changeSkin_back.layer.masksToBounds = YES;
+    UIButton * changeSkin = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, wid, 50)];
+    changeSkin.tag = 2;
+    [changeSkin setTitle:@"Change skin" forState:UIControlStateNormal];
+//    changeSkin.backgroundColor = [UIColor blueColor];
+//    changeSkin.titleLabel.textColor = [UIColor whiteColor];
+    changeSkin.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
+//    changeSkin.layer.cornerRadius = 25;
+//    changeSkin.layer.masksToBounds = YES;
+//    changeSkin.layer.backgroundColor = [UIColor clearColor].CGColor;
+    [changeSkin addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [changeSkin_back addSubview:changeSkin];
+    [self.view addSubview:changeSkin_back];
     //显示欢迎字体
     UILabel * welcome_label = [[UILabel alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/6, SCREEN_WIDTH, 100)];
     welcome_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:40];
@@ -96,6 +120,34 @@
 //            [self presentViewController:scoreVC animated:NO completion:^{
 //                NSLog(@"ScoresViewController Loaded");
 //            }];
+            break;
+        }
+        case 2:
+        {
+            NSLog(@"change skin");
+            if (!self.changeBeShown) {
+                [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                    CGPoint center = self.changeSkinView.center;
+                    self.changeSkinView.center = CGPointMake(center.x, center.y-SCREEN_HEIGHT*2/3+60);
+                    //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
+                } completion:^(BOOL finished) {
+                    if (finished) {
+                        NSLog(@"Finish!");
+                        self.changeBeShown = YES;
+                    }
+                }];
+            }else{
+                [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    CGPoint center = self.changeSkinView.center;
+                    self.changeSkinView.center = CGPointMake(center.x, center.y+SCREEN_HEIGHT*2/3-60);
+                    //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
+                } completion:^(BOOL finished) {
+                    if (finished) {
+                        NSLog(@"Finish!");
+                        self.changeBeShown = NO;
+                    }
+                }];
+            }
             break;
         }
         default:
