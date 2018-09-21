@@ -31,6 +31,13 @@
 
 @property (assign,nonatomic) CGFloat lastTouch_groundBack;
 
+@property (assign,nonatomic) CGFloat backgroundColor;//控制器背景颜色
+@property (assign,nonatomic) CGFloat ballColor;//BallColor
+@property (assign,nonatomic) CGFloat groundColor;//GroundColor
+//@property (assign,nonatomic) CGFloat themeColor_S;
+//@property (assign,nonatomic) CGFloat themeColor_B;
+//@property (assign,nonatomic) CGFloat themeColor_alpha;
+
 //@property (assign,nonatomic) BOOL gesture_lock;//手势锁，1为已上锁，0为未上锁
 //@property (strong,nonatomic) NSTimer * timer;
 
@@ -114,7 +121,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self.view addSubview:backOfCard];
     //展示结束界面
     TheCardView * card = [[TheCardView alloc] initWithScore:[NSString stringWithFormat:@"%ld",(NSInteger)self.totalScores]];
-//    card.score_str = ;
+    [card setThemeWithBackgroundColor:self.backgroundColor andWordColor:self.groundColor];
     card.block_PlayAgain = ^{
         //移除背景
         [backOfCard removeFromSuperview];
@@ -197,7 +204,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     //设置当前控制器的属性
-    self.view.backgroundColor = [UIColor whiteColor];
+    if (self.backgroundColor!=0) {
+        self.view.backgroundColor = [UIColor colorWithHue:self.backgroundColor saturation:1.0 brightness:1.0 alpha:1.0];
+    }else{
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
     //初始化当前控制器各种成员变量
 //    self.count = 0;
     self.duration = 0.5;
@@ -216,6 +227,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //BackView
     UIView * backView = [[UIView alloc]init];
     self.backView = backView;
+    backView.backgroundColor = [UIColor clearColor];
 //    backView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:backView];
     //ground的背景
@@ -232,6 +244,12 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //Ball
     BallView * ball = [[BallView alloc]initWithFrame:CGRectMake(self.view.center.x-BALL_DIAMETER/2, SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER-60, BALL_DIAMETER, BALL_DIAMETER)];
     self.ball = ball;
+    NSLog(@"BallColor:%f",self.ballColor);
+    if (self.ballColor!=0) {
+        ball.layer.backgroundColor = [UIColor colorWithHue:self.ballColor saturation:1.0 brightness:1.0 alpha:1.0].CGColor;
+    }else{
+        ball.layer.backgroundColor = [UIColor blackColor].CGColor;
+    }
     [self.backView addSubview:ball];
     //Go Back to StartInterface:
     UIButton * goBack = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
@@ -269,6 +287,12 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)createInitGround{
     //元祖ground:
     GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
+    NSLog(@"GroundColor:%f",self.groundColor);
+    if (self.groundColor!=0) {
+        ground.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.6 brightness:0.8 alpha:1.0];
+    }else{
+        ground.backgroundColor = [UIColor colorWithHue:0 saturation:0.0 brightness:0.6 alpha:1.0];
+    }
     self.firstGround = ground;
     self.totalScores = 0;  //新一轮游戏需要置零记分器
     ground.hasLanded = NO;
@@ -301,6 +325,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     
     //递归ground
     GroundView * ground_new = [[GroundView alloc]initWithRandom:x];
+    if (self.groundColor!=0) {
+        ground_new.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.6 brightness:0.8 alpha:1.0];
+    }else{
+        ground_new.backgroundColor = [UIColor colorWithHue:0 saturation:0.0 brightness:0.6 alpha:1.0];
+    }
     //设置ground的属性(将最后一个ground后的gap赋值给新创建的groundnew的frontgap)
     GroundView * pre = self.ground_back.subviews.lastObject;
     ground_new.front_gap = pre.behind_gap;
@@ -484,5 +513,18 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     UIImage * currentImg = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return currentImg;
+}
+//设置background颜色
+-(void)setBackgroundColorWith:(CGFloat)H andS:(CGFloat)S andB:(CGFloat)B andA:(CGFloat)alpha{
+    self.backgroundColor = H;
+}
+//设置ball颜色的依据变量
+-(void)setBallColorWith:(CGFloat)H andS:(CGFloat)S andB:(CGFloat)B andA:(CGFloat)alpha{
+    NSLog(@"Ball color is : %f",H);
+    self.ballColor = H;
+}
+//设置ground颜色的依据变量
+-(void)setGroundColorWith:(CGFloat)H andS:(CGFloat)S andB:(CGFloat)B andA:(CGFloat)alpha{
+    self.groundColor = H;
 }
 @end

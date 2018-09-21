@@ -140,6 +140,19 @@
     }
     
 }
+//设置卡片颜色与z主题颜色i一致
+-(void)setThemeWithBackgroundColor:(CGFloat)back_Hue andWordColor:(CGFloat)word_Hue{
+    if (word_Hue!=0) {
+        self.playAgain.backgroundColor = [UIColor colorWithHue:word_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+    }else{
+        self.playAgain.backgroundColor = [UIColor blackColor];
+    }
+    if (back_Hue!=0) {
+        self.card.backgroundColor = [UIColor colorWithHue:back_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+    }else{
+        self.card.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
+    }
+}
 - (void)drawRect:(CGRect)rect {
     // Drawing code
 }

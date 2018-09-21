@@ -36,7 +36,7 @@
     if (self = [super initWithFrame:frame]) {
         //属性初始化
         self.frame = CGRectMake(frame.origin.x, SCREEN_HEIGHT-GROUND_HEIGHT, frame.size.width, GROUND_HEIGHT);
-        self.backgroundColor = [UIColor darkGrayColor];
+//        self.backgroundColor = [UIColor darkGrayColor];
         self.layer.masksToBounds = YES;
         self.userInteractionEnabled = YES;
         self.behind_gap = [self randomGap];   //得到一个behind_gap随机数
@@ -54,7 +54,7 @@
     if (self = [super init]) {
         //属性初始化
         self.frame = CGRectMake(x, SCREEN_HEIGHT-GROUND_HEIGHT, [self getRadom_ground_wid], GROUND_HEIGHT);
-        self.backgroundColor = [UIColor darkGrayColor];
+//        self.backgroundColor = [UIColor darkGrayColor];
         self.layer.masksToBounds = YES;
         self.userInteractionEnabled = YES;
         self.behind_gap = [self randomGap];   //得到一个behind_gap随机数

@@ -15,6 +15,8 @@
     NSString * const storeUserKey;
     //游戏难度标示：
     NSInteger level;
+    //主题色
+    float color;
 }
 
 @end

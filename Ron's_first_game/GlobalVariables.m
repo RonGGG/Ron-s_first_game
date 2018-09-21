@@ -15,4 +15,6 @@ NSString * const storeUserKey = @"storeUser";
 
 //游戏难度标示：
 NSInteger level = 0;
+//color
+float color = 0;
 @end

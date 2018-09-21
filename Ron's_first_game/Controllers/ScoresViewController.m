@@ -10,6 +10,8 @@
 
 @interface ScoresViewController ()
 @property (weak,nonatomic) UIView * backView;
+/*数据*/
+@property (strong,nonatomic) NSMutableArray * scoreList;
 @end
 //safe area适配：
 static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
@@ -44,6 +46,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [goBack addTarget:self action:@selector(goBackTo_startInterface) forControlEvents:UIControlEventTouchUpInside];
     [self.backView addSubview:goBack];
     //显示...
+    
     //显示分数
 }
 //返回Start界面

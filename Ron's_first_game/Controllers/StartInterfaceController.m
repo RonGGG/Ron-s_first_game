@@ -16,7 +16,16 @@
 /*View*/
 @property (weak,nonatomic) ChangSkinView * changeSkinView;
 /*属性*/
-@property (assign,nonatomic) BOOL changeBeShown;
+@property (assign,nonatomic) BOOL changeBeShown;//更换颜色菜单是否出现
+
+@property (assign,nonatomic) CGFloat backgroundColor_Hue;//控制器主题颜色
+@property (assign,nonatomic) CGFloat ballColor_Hue;//ball的颜色
+@property (assign,nonatomic) CGFloat wordColor_Hue;//Word颜色
+//@property (assign,nonatomic) CGFloat themeColor_S;
+//@property (assign,nonatomic) CGFloat themeColor_B;
+//@property (assign,nonatomic) CGFloat themeColor_alpha;
+
+
 @end
 
 @implementation StartInterfaceController
@@ -30,7 +39,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.changeBeShown = NO;
     //开始游戏按钮：
-    UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-10)/2, SCREEN_HEIGHT/4*3, SCREEN_WIDTH-150, 70)];
+    UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-10)/2, SCREEN_HEIGHT/3*2, SCREEN_WIDTH-150, 70)];
     btn.tag = 0;
     [btn setTitle:@"Play Now    >" forState:UIControlStateNormal];
     btn.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -52,25 +61,6 @@
     checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
     [checkScores addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:checkScores];
-    //更换主题按钮L：
-    CGFloat wid = SCREEN_WIDTH;
-    ChangSkinView * changeSkin_back = [[ChangSkinView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-60, wid, SCREEN_HEIGHT)];
-    self.changeSkinView = changeSkin_back;
-    changeSkin_back.backgroundColor = [UIColor blackColor];
-    changeSkin_back.layer.cornerRadius = 18;
-    changeSkin_back.layer.masksToBounds = YES;
-    UIButton * changeSkin = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, wid, 50)];
-    changeSkin.tag = 2;
-    [changeSkin setTitle:@"Change skin" forState:UIControlStateNormal];
-//    changeSkin.backgroundColor = [UIColor blueColor];
-//    changeSkin.titleLabel.textColor = [UIColor whiteColor];
-    changeSkin.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
-//    changeSkin.layer.cornerRadius = 25;
-//    changeSkin.layer.masksToBounds = YES;
-//    changeSkin.layer.backgroundColor = [UIColor clearColor].CGColor;
-    [changeSkin addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [changeSkin_back addSubview:changeSkin];
-    [self.view addSubview:changeSkin_back];
     //显示欢迎字体
     UILabel * welcome_label = [[UILabel alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/6, SCREEN_WIDTH, 100)];
     welcome_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:40];
@@ -90,22 +80,66 @@
 //    }
     username_label.text = [UserInfo sharedUser].nickName;
     [self.view addSubview:username_label];
+    //更换主题按钮L：
+    CGFloat wid = SCREEN_WIDTH;
+    
+    UIButton * changeSkin = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, wid, 50)];
+    changeSkin.tag = 2;
+    [changeSkin setTitle:@"Change skin" forState:UIControlStateNormal];
+    changeSkin.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
+    [changeSkin addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    ChangSkinView * changeSkin_back = [[ChangSkinView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-60, wid, SCREEN_HEIGHT)];
+    self.changeSkinView = changeSkin_back;
+    changeSkin_back.changeBackgroundColor = ^(CGFloat color_h, CGFloat color_s, CGFloat color_b, CGFloat alpha) {
+        //更改本控制器中各背景颜色
+        self.view.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        //更改本控制器background颜色
+        self.backgroundColor_Hue = color_h;
+    };
+    changeSkin_back.changeBallColor = ^(CGFloat color_h, CGFloat color_s, CGFloat color_b, CGFloat alpha) {
+        self.ballColor_Hue = color_h;
+    };
+    changeSkin_back.changeWordsColor = ^(CGFloat color_h, CGFloat color_s, CGFloat color_b, CGFloat alpha) {
+        welcome_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        username_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        btn.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        checkScores.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        self.wordColor_Hue = color_h;
+    };
+    changeSkin_back.closeChangeView = ^{
+        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            CGPoint center = self.changeSkinView.center;
+            self.changeSkinView.center = CGPointMake(center.x, center.y+SCREEN_HEIGHT*2/3-60);
+            //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
+        } completion:^(BOOL finished) {
+            if (finished) {
+                NSLog(@"Finish!");
+                self.changeBeShown = NO;
+            }
+        }];
+    };
+    changeSkin_back.backgroundColor = [UIColor blackColor];
+    changeSkin_back.layer.cornerRadius = 18;
+    changeSkin_back.layer.masksToBounds = YES;
+    
+    [changeSkin_back addSubview:changeSkin];
+    [self.view addSubview:changeSkin_back];
 }
 -(void)clickBtn:(UIButton*)sender{
     NSLog(@"Tag:%ld",sender.tag);
     switch (sender.tag) {
         case 0:{
             ViewController * VC = [[ViewController alloc]init];
+            [VC setBackgroundColorWith:self.backgroundColor_Hue andS:1.0 andB:1.0 andA:1.0];
+            [VC setBallColorWith:self.ballColor_Hue andS:1.0 andB:1.0 andA:1.0];
+            [VC setGroundColorWith:self.wordColor_Hue andS:1.0 andB:1.0 andA:1.0];
             [self wxs_presentViewController:VC makeTransition:^(WXSTransitionProperty *transition) {
                 transition.animationTime = 0.5;
                 transition.animationType = WXSTransitionAnimationTypeSysCubeFromRight;
             } completion:^{
                 NSLog(@"ViewController Loaded");
             }];
-            
-//            [self presentViewController:VC animated:NO completion:^{
-//                NSLog(@"ViewController Loaded");
-//            }];
             break;
         }
         case 1:
@@ -117,9 +151,6 @@
             } completion:^{
                 NSLog(@"ScoresViewController Loaded");
             }];
-//            [self presentViewController:scoreVC animated:NO completion:^{
-//                NSLog(@"ScoresViewController Loaded");
-//            }];
             break;
         }
         case 2:
@@ -156,14 +187,5 @@
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
