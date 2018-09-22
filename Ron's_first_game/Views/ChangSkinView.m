@@ -7,7 +7,11 @@
 //
 
 #import "ChangSkinView.h"
-
+@interface ChangSkinView ()
+@property (weak,nonatomic) UISlider * background_slider;
+@property (weak,nonatomic) UISlider * ball_slider;
+@property (weak,nonatomic) UISlider * words_slider;
+@end
 @implementation ChangSkinView
 
 -(instancetype)initWithFrame:(CGRect)frame{
@@ -21,12 +25,13 @@
         swipe.direction = UISwipeGestureRecognizerDirectionDown;
         [self addGestureRecognizer:swipe];
         //Background:
-        UILabel * background_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 70, SCREEN_WIDTH, 40)];
+        UILabel * background_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 70, SCREEN_WIDTH/2, 40)];
         background_label.textColor = [UIColor whiteColor];
         background_label.text = @"backgrond color";
         background_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
         [self addSubview:background_label];
         UISlider *background_slide = [[UISlider alloc]initWithFrame:CGRectMake(10, 120, SCREEN_WIDTH-20, 30)];
+        self.background_slider = background_slide;
         background_slide.tag = 0;
         background_slide.minimumTrackTintColor = [UIColor whiteColor];
         background_slide.maximumTrackTintColor = [UIColor whiteColor];
@@ -42,6 +47,7 @@
         ball_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
         [self addSubview:ball_label];
         UISlider * ball_slide = [[UISlider alloc]initWithFrame:CGRectMake(10, 200, SCREEN_WIDTH-20, 30)];
+        self.ball_slider = ball_slide;
         ball_slide.tag = 1;
         ball_slide.minimumTrackTintColor = [UIColor whiteColor];
         ball_slide.maximumTrackTintColor = [UIColor whiteColor];
@@ -57,6 +63,7 @@
         word_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
         [self addSubview:word_label];
         UISlider * word_slide = [[UISlider alloc]initWithFrame:CGRectMake(10, 280, SCREEN_WIDTH-20, 30)];
+        self.words_slider = word_slide;
         word_slide.tag = 2;
         word_slide.minimumTrackTintColor = [UIColor whiteColor];
         word_slide.maximumTrackTintColor = [UIColor whiteColor];
@@ -64,6 +71,16 @@
         word_slide.minimumValue = 0;
         [word_slide addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:word_slide];
+        
+        //Return to original theme
+        UIButton * return_btn = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2+25, 75, SCREEN_WIDTH/2-50, 30)];
+        return_btn.layer.cornerRadius = 12;
+        return_btn.layer.masksToBounds = YES;
+        return_btn.layer.borderColor = [UIColor whiteColor].CGColor;
+        return_btn.layer.borderWidth = 1.0;
+        [return_btn setTitle:@"original color" forState:UIControlStateNormal];
+        [return_btn addTarget:self action:@selector(returnToOriginal:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:return_btn];
     }
     return self;
 }
@@ -93,5 +110,20 @@
 //下滑动作：
 -(void)swipeDown:(UISwipeGestureRecognizer*)swipe{
     self.closeChangeView();
+}
+//点击original按钮
+-(void)returnToOriginal:(UIButton*)button{
+    //颜色恢复
+    self.changeBackgroundColor(0.0, 1.0, 1.0,1.0);
+    self.changeBallColor(0.0, 1.0, 1.0, 1.0);
+    self.changeWordsColor(0.0, 1.0, 1.0, 1.0);
+    self.backgroundColor = [UIColor blackColor];
+    self.superview.backgroundColor = [UIColor whiteColor];
+    //slider恢复
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.background_slider setValue:0.0 animated:YES];
+        [self.ball_slider setValue:0.0 animated:YES];
+        [self.words_slider setValue:0.0 animated:YES];
+    }];
 }
 @end

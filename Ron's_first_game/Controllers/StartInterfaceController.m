@@ -93,7 +93,11 @@
     self.changeSkinView = changeSkin_back;
     changeSkin_back.changeBackgroundColor = ^(CGFloat color_h, CGFloat color_s, CGFloat color_b, CGFloat alpha) {
         //更改本控制器中各背景颜色
-        self.view.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        if (color_h!=0) {
+            self.view.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+        }else{
+            self.view.backgroundColor = [UIColor whiteColor];
+        }
         //更改本控制器background颜色
         self.backgroundColor_Hue = color_h;
     };
@@ -101,11 +105,19 @@
         self.ballColor_Hue = color_h;
     };
     changeSkin_back.changeWordsColor = ^(CGFloat color_h, CGFloat color_s, CGFloat color_b, CGFloat alpha) {
-        welcome_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
-        username_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
-        btn.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
-        checkScores.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
-        self.wordColor_Hue = color_h;
+        if (color_h!=0) {
+            welcome_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+            username_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+            btn.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+            checkScores.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+            self.wordColor_Hue = color_h;
+        }else{
+            welcome_label.textColor = [UIColor blackColor];
+            username_label.textColor = [UIColor blackColor];
+            btn.backgroundColor = [UIColor blackColor];
+            checkScores.backgroundColor = [UIColor blackColor];
+            self.wordColor_Hue = 0;
+        }
     };
     changeSkin_back.closeChangeView = ^{
         [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -145,6 +157,9 @@
         case 1:
         {
             ScoresViewController * scoreVC = [[ScoresViewController alloc]init];
+            [scoreVC loadSocresFromServer];
+            [scoreVC setBackgroundColorWith:self.backgroundColor_Hue andS:1.0 andB:1.0 andA:1.0];
+            [scoreVC setWordsColorWith:self.wordColor_Hue andS:1.0 andB:1.0 andA:1.0];
             [self wxs_presentViewController:scoreVC makeTransition:^(WXSTransitionProperty *transition) {
                 transition.animationTime = 0.5;
                 transition.animationType = WXSTransitionAnimationTypeSysCubeFromLeft;

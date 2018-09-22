@@ -24,4 +24,8 @@
 
 /*球直径*/
 #define BALL_DIAMETER 30
+
+
+/*网络常量*/
+#define MAIN_DOMAIN @"http://123.207.19.172"
 #endif /* Constants_pch */
