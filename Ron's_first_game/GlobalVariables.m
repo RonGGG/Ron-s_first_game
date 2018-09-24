@@ -9,7 +9,7 @@
 #import "GlobalVariables.h"
 
 @implementation GlobalVariables
-
+NSString * const firstTimeStartGame = @"firstTimeStartGame";
 NSString * const machineType = @"machineType";
 NSString * const storeUserKey = @"storeUser";
 

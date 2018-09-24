@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property void (^changeWordsColor)(CGFloat color_h,CGFloat color_s,CGFloat color_b,CGFloat alpha);
 //下滑收起
 @property void (^closeChangeView)(void);
+//设置主题颜色
+-(void)setColorValue;
 @end
 
 NS_ASSUME_NONNULL_END

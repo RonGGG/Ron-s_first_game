@@ -35,7 +35,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [super viewDidLoad];
     //设置当前view属性
     if (self.viewBackground_Hue!=0) {
-        self.view.backgroundColor = [UIColor colorWithHue:self.viewBackground_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        self.view.backgroundColor = [UIColor colorWithHue:self.viewBackground_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         self.view.backgroundColor = [UIColor whiteColor];
     }
@@ -56,7 +56,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     scoresBoard_label.font = [UIFont fontWithName:@"AmericanTypewriter-Bold" size:40];
     scoresBoard_label.textAlignment = NSTextAlignmentLeft;
     if (self.scoresBoard_label_Hue!=0) {
-        scoresBoard_label.textColor = [UIColor colorWithHue:self.scoresBoard_label_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        scoresBoard_label.textColor = [UIColor colorWithHue:self.scoresBoard_label_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         scoresBoard_label.textColor = [UIColor blackColor];
     }
@@ -65,7 +65,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     CGFloat scoresBoard_label_yMax = scoresBoard_label.frame.origin.y+scoresBoard_label.frame.size.height;
     UILabel * myHighest_label = [[UILabel alloc]initWithFrame:CGRectMake(10, scoresBoard_label_yMax+20, SCREEN_WIDTH/2, 40)];
     if (self.myHighest_label_Hue!=0) {
-        myHighest_label.textColor = [UIColor colorWithHue:self.myHighest_label_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        myHighest_label.textColor = [UIColor colorWithHue:self.myHighest_label_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         myHighest_label.textColor = [UIColor blackColor];
     }
@@ -76,7 +76,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //所有用户最高分label
     UILabel * highest_label = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2+10, scoresBoard_label_yMax+20, SCREEN_WIDTH/2, 40)];
     if (self.highest_label_Hue!=0) {
-        highest_label.textColor = [UIColor colorWithHue:self.highest_label_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        highest_label.textColor = [UIColor colorWithHue:self.highest_label_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         highest_label.textColor = [UIColor blackColor];
     }
@@ -88,7 +88,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     CGFloat myHighest_label_yMax = myHighest_label.frame.origin.y+myHighest_label.frame.size.height;
     UILabel * myHighest = [[UILabel alloc]initWithFrame:CGRectMake(10, myHighest_label_yMax, SCREEN_WIDTH/2, 40)];
     if (self.myHighest_Hue!=0) {
-        myHighest.textColor = [UIColor colorWithHue:self.myHighest_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        myHighest.textColor = [UIColor colorWithHue:self.myHighest_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         myHighest.textColor = [UIColor blackColor];
     }
@@ -99,7 +99,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //所有最高分
     UILabel * highest = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2+10, myHighest_label_yMax, SCREEN_WIDTH/2, 40)];
     if (self.highest_Hue!=0) {
-        highest.textColor = [UIColor colorWithHue:self.highest_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        highest.textColor = [UIColor colorWithHue:self.highest_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         highest.textColor = [UIColor blackColor];
     }
@@ -111,7 +111,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     CGFloat myHighest_yMax = myHighest.frame.origin.y+myHighest.frame.size.height;
     UILabel * scoreList_label = [[UILabel alloc]initWithFrame:CGRectMake(10, myHighest_yMax+30, SCREEN_WIDTH-20, 50)];
     if (self.scoreList_label_Hue!=0) {
-        scoreList_label.textColor = [UIColor colorWithHue:self.scoreList_label_Hue saturation:1.0 brightness:1.0 alpha:1.0];
+        scoreList_label.textColor = [UIColor colorWithHue:self.scoreList_label_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         scoreList_label.textColor = [UIColor blackColor];
     }

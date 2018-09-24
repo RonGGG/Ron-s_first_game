@@ -7,13 +7,22 @@
 //
 
 #import "ChangSkinView.h"
+#import "UserInfo.h"
 @interface ChangSkinView ()
 @property (weak,nonatomic) UISlider * background_slider;
 @property (weak,nonatomic) UISlider * ball_slider;
 @property (weak,nonatomic) UISlider * words_slider;
 @end
 @implementation ChangSkinView
-
+-(void)setColorValue{
+    UserInfo * user = [UserInfo sharedUser];
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.background_slider setValue:user.background_Hue*360 animated:YES];
+        [self.ball_slider setValue:user.ball_Hue*360 animated:YES];
+        [self.words_slider setValue:user.words_Hue*360 animated:YES];
+    }];
+    NSLog(@"back value: %f",self.background_slider.value);
+}
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor blackColor];
@@ -86,21 +95,25 @@
 }
 //slider动作：
 -(void)sliderChanged:(UISlider*)slider{
+    UserInfo * user = [UserInfo sharedUser];
     switch (slider.tag) {
         case 0://background
         {
-            self.changeBackgroundColor(slider.value/360.0, 1.0, 1.0,1.0);
+            self.changeBackgroundColor(slider.value/360.0, 0.5, 1.0,1.0);
+            user.background_Hue = slider.value/360.0;
             break;
         }
         case 1://ball
         {
-            self.changeBallColor(slider.value/360.0, 1.0, 1.0, 1.0);
+            self.changeBallColor(slider.value/360.0, 0.5, 1.0, 1.0);
+            user.ball_Hue = slider.value/360.0;
             break;
         }
         case 2://words
         {
-            self.backgroundColor = [UIColor colorWithHue:slider.value/360.0 saturation:1.0 brightness:1.0 alpha:1.0];
-            self.changeWordsColor(slider.value/360.0, 1.0, 1.0, 1.0);
+            self.backgroundColor = [UIColor colorWithHue:slider.value/360.0 saturation:0.5 brightness:1.0 alpha:1.0];
+            self.changeWordsColor(slider.value/360.0, 0.5, 1.0, 1.0);
+            user.words_Hue = slider.value/360.0;
             break;
         }
         default:
@@ -113,17 +126,23 @@
 }
 //点击original按钮
 -(void)returnToOriginal:(UIButton*)button{
-    //颜色恢复
-    self.changeBackgroundColor(0.0, 1.0, 1.0,1.0);
-    self.changeBallColor(0.0, 1.0, 1.0, 1.0);
-    self.changeWordsColor(0.0, 1.0, 1.0, 1.0);
-    self.backgroundColor = [UIColor blackColor];
-    self.superview.backgroundColor = [UIColor whiteColor];
-    //slider恢复
     [UIView animateWithDuration:0.2 animations:^{
+        //颜色恢复
+        self.changeBackgroundColor(0.0, 1.0, 1.0,1.0);
+        self.changeBallColor(0.0, 1.0, 1.0, 1.0);
+        self.changeWordsColor(0.0, 1.0, 1.0, 1.0);
+        self.backgroundColor = [UIColor blackColor];
+        self.superview.backgroundColor = [UIColor whiteColor];
+        //slider恢复
         [self.background_slider setValue:0.0 animated:YES];
         [self.ball_slider setValue:0.0 animated:YES];
         [self.words_slider setValue:0.0 animated:YES];
     }];
+    //用户数据恢复
+    UserInfo * user = [UserInfo sharedUser];
+    user.background_Hue = 0;
+    user.ball_Hue = 0;
+    user.words_Hue = 0;
+    
 }
 @end

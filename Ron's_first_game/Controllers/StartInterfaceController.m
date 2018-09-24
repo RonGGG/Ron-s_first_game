@@ -21,6 +21,11 @@
 @property (assign,nonatomic) CGFloat backgroundColor_Hue;//控制器主题颜色
 @property (assign,nonatomic) CGFloat ballColor_Hue;//ball的颜色
 @property (assign,nonatomic) CGFloat wordColor_Hue;//Word颜色
+@property (weak,nonatomic) UIButton * playNow;
+@property (weak,nonatomic) UIButton * checkScores;
+@property (weak,nonatomic) UILabel * welcome_label;
+@property (weak,nonatomic) UILabel * username_label;
+
 //@property (assign,nonatomic) CGFloat themeColor_S;
 //@property (assign,nonatomic) CGFloat themeColor_B;
 //@property (assign,nonatomic) CGFloat themeColor_alpha;
@@ -29,18 +34,15 @@
 @end
 
 @implementation StartInterfaceController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //这里先初始化一个假的用户模型
-    [UserInfo sharedUser].nickName = @"GZR";
-    [UserInfo sharedUser].isMale = YES;
     //设置当前view的属性
     self.view.backgroundColor = [UIColor whiteColor];
     self.changeBeShown = NO;
     //开始游戏按钮：
     UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-10)/2, SCREEN_HEIGHT/3*2, SCREEN_WIDTH-150, 70)];
     btn.tag = 0;
+    self.playNow = btn;
     [btn setTitle:@"Play Now    >" forState:UIControlStateNormal];
     btn.titleLabel.textAlignment = NSTextAlignmentCenter;
     btn.titleLabel.textColor = [UIColor whiteColor];
@@ -53,6 +55,7 @@
     //查看记分榜按钮：
     UIButton * checkScores = [[UIButton alloc]initWithFrame:CGRectMake(-30, SCREEN_HEIGHT/2+30, SCREEN_WIDTH-150, 50)];
     checkScores.tag = 1;
+    self.checkScores = checkScores;
     [checkScores setTitle:@"<    View scores" forState:UIControlStateNormal];
     checkScores.titleLabel.textColor = [UIColor whiteColor];
     checkScores.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
@@ -63,6 +66,7 @@
     [self.view addSubview:checkScores];
     //显示欢迎字体
     UILabel * welcome_label = [[UILabel alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/6, SCREEN_WIDTH, 100)];
+    self.welcome_label = welcome_label;
     welcome_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:40];
     welcome_label.textAlignment = NSTextAlignmentCenter;
     welcome_label.textColor = [UIColor blackColor];
@@ -70,6 +74,7 @@
     [self.view addSubview:welcome_label];
     //显示用户信息
     UILabel * username_label = [[UILabel alloc]initWithFrame:CGRectMake(0, welcome_label.frame.origin.y+60, SCREEN_WIDTH, 100)];
+    self.username_label = username_label;
     username_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:30];
     username_label.textAlignment = NSTextAlignmentCenter;
     username_label.textColor = [UIColor blackColor];
@@ -120,16 +125,7 @@
         }
     };
     changeSkin_back.closeChangeView = ^{
-        [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            CGPoint center = self.changeSkinView.center;
-            self.changeSkinView.center = CGPointMake(center.x, center.y+SCREEN_HEIGHT*2/3-60);
-            //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
-        } completion:^(BOOL finished) {
-            if (finished) {
-                NSLog(@"Finish!");
-                self.changeBeShown = NO;
-            }
-        }];
+        [self closeTheChangeSkinView];
     };
     changeSkin_back.backgroundColor = [UIColor blackColor];
     changeSkin_back.layer.cornerRadius = 18;
@@ -137,6 +133,31 @@
     
     [changeSkin_back addSubview:changeSkin];
     [self.view addSubview:changeSkin_back];
+    
+    if (![UserInfo sharedUser].isFirstTime) {
+        self.backgroundColor_Hue = [UserInfo sharedUser].background_Hue;
+        self.ballColor_Hue = [UserInfo sharedUser].ball_Hue;
+        self.wordColor_Hue = [UserInfo sharedUser].words_Hue;
+        NSLog(@"Back and ball and word : %f %f %f ",self.backgroundColor_Hue,self.ballColor_Hue,self.wordColor_Hue);
+        if (self.backgroundColor_Hue==0) {
+            self.view.backgroundColor = [UIColor whiteColor];
+        }else{
+            self.view.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].background_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+        }
+        if (self.wordColor_Hue==0) {
+            self.welcome_label.textColor = [UIColor blackColor];
+            self.username_label.textColor = [UIColor blackColor];
+            self.playNow.layer.backgroundColor = [UIColor blackColor].CGColor;
+            self.checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
+            self.changeSkinView.backgroundColor = [UIColor blackColor];
+        }else{
+            self.welcome_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+            self.username_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+            self.playNow.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
+            self.checkScores.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
+            self.changeSkinView.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+        }
+    }
 }
 -(void)clickBtn:(UIButton*)sender{
     NSLog(@"Tag:%ld",sender.tag);
@@ -172,6 +193,9 @@
         {
             NSLog(@"change skin");
             if (!self.changeBeShown) {
+                //更改changeskincview的slider
+                [self.changeSkinView setColorValue];
+
                 [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseIn animations:^{
                     CGPoint center = self.changeSkinView.center;
                     self.changeSkinView.center = CGPointMake(center.x, center.y-SCREEN_HEIGHT*2/3+60);
@@ -183,16 +207,7 @@
                     }
                 }];
             }else{
-                [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    CGPoint center = self.changeSkinView.center;
-                    self.changeSkinView.center = CGPointMake(center.x, center.y+SCREEN_HEIGHT*2/3-60);
-                    //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
-                } completion:^(BOOL finished) {
-                    if (finished) {
-                        NSLog(@"Finish!");
-                        self.changeBeShown = NO;
-                    }
-                }];
+                [self closeTheChangeSkinView];
             }
             break;
         }
@@ -201,6 +216,23 @@
     }
     
 }
-
+-(void)closeTheChangeSkinView{
+    //实现主题数据保存
+//    UserInfo * user = [UserInfo sharedUser];
+//    user.background_Hue = self.backgroundColor_Hue;
+//    user.ball_Hue = self.ballColor_Hue;
+//    user.words_Hue = self.wordColor_Hue;
+    //close动画实现
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        CGPoint center = self.changeSkinView.center;
+        self.changeSkinView.center = CGPointMake(center.x, center.y+SCREEN_HEIGHT*2/3-60);
+        //                self.changeSkinView.frame = CGRectMake(0, SCREEN_HEIGHT*2/3, SCREEN_WIDTH, SCREEN_HEIGHT/3);
+    } completion:^(BOOL finished) {
+        if (finished) {
+            NSLog(@"Finish!");
+            self.changeBeShown = NO;
+        }
+    }];
+}
 
 @end

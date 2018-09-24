@@ -11,6 +11,7 @@
 @interface GlobalVariables : NSObject
 //NSString * const machineType;
 {
+    NSString * const firstTimeStartGame;
     NSString * const machineType;
     NSString * const storeUserKey;
     //游戏难度标示：

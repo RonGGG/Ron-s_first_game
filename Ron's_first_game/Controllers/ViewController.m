@@ -205,7 +205,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [super viewDidLoad];
     //设置当前控制器的属性
     if (self.backgroundColor!=0) {
-        self.view.backgroundColor = [UIColor colorWithHue:self.backgroundColor saturation:1.0 brightness:1.0 alpha:1.0];
+        self.view.backgroundColor = [UIColor colorWithHue:self.backgroundColor saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
         self.view.backgroundColor = [UIColor whiteColor];
     }
@@ -289,9 +289,9 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
     NSLog(@"GroundColor:%f",self.groundColor);
     if (self.groundColor!=0) {
-        ground.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.6 brightness:0.8 alpha:1.0];
+        ground.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.5 brightness:0.9 alpha:1.0];
     }else{
-        ground.backgroundColor = [UIColor colorWithHue:0 saturation:0.0 brightness:0.6 alpha:1.0];
+        ground.backgroundColor = [UIColor colorWithHue:0 saturation:0.5 brightness:0.9 alpha:1.0];
     }
     self.firstGround = ground;
     self.totalScores = 0;  //新一轮游戏需要置零记分器
@@ -326,9 +326,9 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //递归ground
     GroundView * ground_new = [[GroundView alloc]initWithRandom:x];
     if (self.groundColor!=0) {
-        ground_new.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.6 brightness:0.8 alpha:1.0];
+        ground_new.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.5 brightness:0.9 alpha:1.0];
     }else{
-        ground_new.backgroundColor = [UIColor colorWithHue:0 saturation:0.0 brightness:0.6 alpha:1.0];
+        ground_new.backgroundColor = [UIColor colorWithHue:0 saturation:0.5 brightness:0.9 alpha:1.0];
     }
     //设置ground的属性(将最后一个ground后的gap赋值给新创建的groundnew的frontgap)
     GroundView * pre = self.ground_back.subviews.lastObject;
@@ -420,13 +420,14 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)startGameWithDuration:(NSTimeInterval)duration andBounceHeight:(CGFloat)height{
     //开始游戏
     [self.pause_btn setSelected:YES];
+    self.ground_back.userInteractionEnabled = YES;
     [self ballAnimationWithDuration:duration andBounceHeight:height];
 }
 //停止游戏调用
 -(void)stopGame{
     //停止游戏
     [self.pause_btn setSelected:NO];
-//    [self.ball.layer removeAllAnimations];
+    self.ground_back.userInteractionEnabled = NO;
 }
 //返回Start界面
 -(void)goBackTo_startInterface{
