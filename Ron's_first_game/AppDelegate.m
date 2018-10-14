@@ -19,16 +19,15 @@
  */
 #import "AppDelegate.h"
 #import "StartInterfaceController.h"
-#include "sys/utsname.h"
+//#include "sys/utsname.h"
 #import "UserInfo.h"
-
+#import "SignUpView.h"
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
 extern NSString * const firstTimeStartGame;
-extern NSString * const storeUserKey;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"didFinishLaunchingWithOptions");
 //    //获取设备信息
@@ -38,43 +37,29 @@ extern NSString * const storeUserKey;
 //    //并数据持久化保存硬盘：
 //    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding] forKey:machineType];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
+    /*初始化*/
     NSString * isFirstTime = [[NSUserDefaults standardUserDefaults] objectForKey:firstTimeStartGame];
     if (isFirstTime==nil) {//说明第一次使用App
         NSLog(@"Is first time");
         [[NSUserDefaults standardUserDefaults] setObject:@"STARTED" forKey:firstTimeStartGame];
-        [UserInfo sharedUser].nickName = @"GZR";
-        [UserInfo sharedUser].isMale = YES;
-        [UserInfo sharedUser].uid = 0;
-        [UserInfo sharedUser].highestScore = 0;
-        [UserInfo sharedUser].background_Hue = 0;
-        [UserInfo sharedUser].ball_Hue = 0;
-        [UserInfo sharedUser].words_Hue = 0;
         [UserInfo sharedUser].isFirstTime = YES;   //这个变量专门用于设置第一次主题用
-        [UserInfo saveAccount];
     }else{
         NSLog(@"Not fisrt time");
         //加载用户信息
         [UserInfo readAccount];
-        [UserInfo sharedUser].isFirstTime = NO;
+        if ([UserInfo sharedUser].uid==nil) {
+            [UserInfo sharedUser].isFirstTime = YES;
+        }else{
+            [UserInfo sharedUser].isFirstTime = NO;
+        }
     }
+    UserInfo * u = [UserInfo sharedUser];
+    NSLog(@"uid:%@ nick:%@ pass:%@ sex:%@ scores:%ld",u.uid,u.nickName,u.password,u.sex,u.highestScore);
     //设置视图:
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     StartInterfaceController * startVC = [[StartInterfaceController alloc]init];
     self.window.rootViewController = startVC;
     [self.window makeKeyAndVisible];
-    //先查看本地有没有已存在的用户
-    if ([[NSUserDefaults standardUserDefaults]objectForKey:[NSString stringWithFormat:@"%@-uid",storeUserKey]]==nil) {
-        //说明本地不存在用户信息
-        //1.创建用户界面
-        //2.发送create请求
-        //3.用户信息本地保存
-        
-    }else{
-        //说明本地存在用户信息
-        //1.发送query请求查看服务器该用户是否存在
-        //2. 存在则：1)比较分数，使用高的 2）同步 网络-本地 信息
-        //   不存在则进入创建用户界面，步骤同上面的if
-    }
     return YES;
 }
 

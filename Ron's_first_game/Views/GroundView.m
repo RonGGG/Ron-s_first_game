@@ -25,7 +25,7 @@
 -(CGFloat)randomGap{
     uint32_t wid;
     while (1) {
-        wid = arc4random_uniform(SCREEN_WIDTH*2/3);
+        wid = arc4random_uniform(SCREEN_WIDTH/3);
         if (wid>=BALL_DIAMETER/3) {
             return (CGFloat)wid;
         }
@@ -106,6 +106,7 @@
     CGRect lastObj_frame = self.superview.subviews.lastObject.frame;
     if (lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap<=SCREEN_WIDTH) {
         return lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap;
+//        return SCREEN_WIDTH;
     }
     return 0;
 }

@@ -14,7 +14,7 @@
 /*第一次触摸点和中心点之间的x方向的位移*/
 @property (assign,nonatomic) CGFloat move_x;
 /*ground前的gap 用来判断球是否掉落*/
-@property (assign,nonatomic) CGFloat front_gap;
+//@property (assign,nonatomic) CGFloat front_gap;
 /*ground后的gap 也就是在生成前一个ground的时候 后面gap的随机值已经确定了*/
 @property (assign,nonatomic) CGFloat behind_gap;
 

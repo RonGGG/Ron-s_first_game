@@ -12,6 +12,9 @@
 #import "UserInfo.h"
 #import "UINavigationController+WXSTransition.h"
 #import "ChangSkinView.h"
+#import "SignUpView.h"
+#import "SignInView.h"
+#import <AFNetworking.h>
 @interface StartInterfaceController ()
 /*View*/
 @property (weak,nonatomic) ChangSkinView * changeSkinView;
@@ -23,6 +26,7 @@
 @property (assign,nonatomic) CGFloat wordColor_Hue;//Word颜色
 @property (weak,nonatomic) UIButton * playNow;
 @property (weak,nonatomic) UIButton * checkScores;
+@property (weak,nonatomic) UIButton * logOut;
 @property (weak,nonatomic) UILabel * welcome_label;
 @property (weak,nonatomic) UILabel * username_label;
 
@@ -34,11 +38,104 @@
 @end
 
 @implementation StartInterfaceController
+extern NSString * const firstTimeStartGame;
+extern NSString * const storeUserKey;
 - (void)viewDidLoad {
     [super viewDidLoad];
     //设置当前view的属性
     self.view.backgroundColor = [UIColor whiteColor];
     self.changeBeShown = NO;
+    //设置UI:
+    [self setUI];
+    if ([UserInfo sharedUser].isFirstTime) {
+        [self setSignUpView];
+    }else{
+        [self checkAccount];
+    }
+    self.username_label.text = [UserInfo sharedUser].nickName;
+//    //先查看本地有没有已存在的用户
+//    if ([[NSUserDefaults standardUserDefaults]objectForKey:[NSString stringWithFormat:@"%@-uid",storeUserKey]]==nil) {
+//        //说明本地不存在用户信息
+//        //1.创建登陆界面
+//        //注册View:
+////        [self setSignUpView];
+//        //2.发送create请求
+//        //3.用户信息本地保存
+//
+//    }else{
+//        //说明本地存在用户信息
+//        //1.发送query请求查看服务器该用户是否存在
+//        //2. 存在则：1)比较分数，使用高的 2）同步 网络-本地 信息
+//        //   不存在则进入创建用户界面，步骤同上面的if
+//    }
+    //判断如何更新主题
+    if (![UserInfo sharedUser].isFirstTime) {
+        self.backgroundColor_Hue = [UserInfo sharedUser].background_Hue;
+        self.ballColor_Hue = [UserInfo sharedUser].ball_Hue;
+        self.wordColor_Hue = [UserInfo sharedUser].words_Hue;
+        NSLog(@"Back and ball and word : %f %f %f ",self.backgroundColor_Hue,self.ballColor_Hue,self.wordColor_Hue);
+        if (self.backgroundColor_Hue==0) {
+            self.view.backgroundColor = [UIColor whiteColor];
+        }else{
+            self.view.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].background_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+        }
+        if (self.wordColor_Hue==0) {
+            self.welcome_label.textColor = [UIColor blackColor];
+            self.username_label.textColor = [UIColor blackColor];
+            self.playNow.layer.backgroundColor = [UIColor blackColor].CGColor;
+            self.checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
+            self.changeSkinView.backgroundColor = [UIColor blackColor];
+        }else{
+            self.welcome_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+            self.username_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+            self.playNow.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
+            self.checkScores.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
+            self.changeSkinView.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
+        }
+    }
+}
+-(void)setSignUpView{
+    SignUpView * log = [[SignUpView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*2)];
+    log.block_resetUI = ^{
+        self.username_label.text = [UserInfo sharedUser].nickName;
+        [UserInfo saveAccount];
+    };
+    [self.view addSubview:log];
+}
+-(void)checkAccount{
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    NSLog(@"UserInfo %@ %@",[UserInfo sharedUser].nickName,[UserInfo sharedUser].password);
+    NSDictionary * dic = @{@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password};
+    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/login"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary * responds = responseObject;
+        NSLog(@"res %@",responds);
+        NSNumber * code = [responds objectForKey:@"code"];
+        if ([code integerValue]==100) {
+            NSLog(@"不需要手动登陆");
+            NSDictionary * data = [responds objectForKey:@"data"];
+            NSLog(@"data %@",data);
+            NSString * highest_str = [NSString stringWithFormat:@"%@",[data objectForKey:@"highScore"]];
+            NSLog(@"highest : %@",highest_str);
+            NSInteger highest = [highest_str integerValue];
+            //比较分数
+            if ([UserInfo sharedUser].highestScore < highest) {
+
+                [UserInfo sharedUser].highestScore = highest;
+            }
+        }else{
+            NSLog(@"Need to login View");
+            SignInView * signIn = [[SignInView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*2)];
+            signIn.block_resetUI = ^{
+                self.username_label.text = [UserInfo sharedUser].nickName;
+                [UserInfo saveAccount];
+            };
+            [self.view addSubview:signIn];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"checkAccount Error");
+    }];
+}
+-(void)setUI{
     //开始游戏按钮：
     UIButton * btn = [[UIButton alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-10)/2, SCREEN_HEIGHT/3*2, SCREEN_WIDTH-150, 70)];
     btn.tag = 0;
@@ -78,12 +175,12 @@
     username_label.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:30];
     username_label.textAlignment = NSTextAlignmentCenter;
     username_label.textColor = [UIColor blackColor];
-//    if ([UserInfo sharedUser].isMale) {
-//        username_label.text = [NSString stringWithFormat:@"Mr.%@",[UserInfo sharedUser].nickName];
-//    }else{
-//        username_label.text = [NSString stringWithFormat:@"Ms.%@",[UserInfo sharedUser].nickName];
-//    }
-    username_label.text = [UserInfo sharedUser].nickName;
+    //    if ([UserInfo sharedUser].isMale) {
+    //        username_label.text = [NSString stringWithFormat:@"Mr.%@",[UserInfo sharedUser].nickName];
+    //    }else{
+    //        username_label.text = [NSString stringWithFormat:@"Ms.%@",[UserInfo sharedUser].nickName];
+    //    }
+//    username_label.text = [UserInfo sharedUser].nickName;
     [self.view addSubview:username_label];
     //更换主题按钮L：
     CGFloat wid = SCREEN_WIDTH;
@@ -133,31 +230,18 @@
     
     [changeSkin_back addSubview:changeSkin];
     [self.view addSubview:changeSkin_back];
-    
-    if (![UserInfo sharedUser].isFirstTime) {
-        self.backgroundColor_Hue = [UserInfo sharedUser].background_Hue;
-        self.ballColor_Hue = [UserInfo sharedUser].ball_Hue;
-        self.wordColor_Hue = [UserInfo sharedUser].words_Hue;
-        NSLog(@"Back and ball and word : %f %f %f ",self.backgroundColor_Hue,self.ballColor_Hue,self.wordColor_Hue);
-        if (self.backgroundColor_Hue==0) {
-            self.view.backgroundColor = [UIColor whiteColor];
-        }else{
-            self.view.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].background_Hue saturation:0.5 brightness:1.0 alpha:1.0];
-        }
-        if (self.wordColor_Hue==0) {
-            self.welcome_label.textColor = [UIColor blackColor];
-            self.username_label.textColor = [UIColor blackColor];
-            self.playNow.layer.backgroundColor = [UIColor blackColor].CGColor;
-            self.checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
-            self.changeSkinView.backgroundColor = [UIColor blackColor];
-        }else{
-            self.welcome_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
-            self.username_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
-            self.playNow.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
-            self.checkScores.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
-            self.changeSkinView.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
-        }
-    }
+    //登出按钮：
+    UIButton * logOut = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/3*2-30, 50, SCREEN_WIDTH/2, 50)];
+    logOut.tag = 3;
+    self.logOut = logOut;
+    logOut.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
+    [logOut addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [logOut setTitle:@"Log out   ×" forState:UIControlStateNormal];
+    logOut.layer.cornerRadius = 25;
+    logOut.layer.masksToBounds = YES;
+    logOut.titleLabel.textColor = [UIColor whiteColor];
+    logOut.layer.backgroundColor = [UIColor blackColor].CGColor;
+    [self.view addSubview:logOut];
 }
 -(void)clickBtn:(UIButton*)sender{
     NSLog(@"Tag:%ld",sender.tag);
@@ -209,6 +293,11 @@
             }else{
                 [self closeTheChangeSkinView];
             }
+            break;
+        }
+        case 3:
+        {
+            
             break;
         }
         default:

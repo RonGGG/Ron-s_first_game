@@ -105,7 +105,12 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     //检查球是否掉下去
     if (self.ball.center.y==SCREEN_HEIGHT-GROUND_HEIGHT-BALL_DIAMETER/2) {//球已到最低点
         for (GroundView * view in self.ground_back.subviews) {
-            if (view.frame.origin.x-view.front_gap<SCREEN_WIDTH/2 && view.frame.origin.x>SCREEN_WIDTH/2) {
+            if (view.frame.origin.x+view.frame.size.width<SCREEN_WIDTH/2 && view.frame.origin.x+view.frame.size.width+view.behind_gap>SCREEN_WIDTH/2) {
+//                UIView * test = [[UIView alloc]initWithFrame:CGRectMake(view.frame.origin.x+view.frame.size.width, SCREEN_HEIGHT/3*2-100, view.behind_gap, 100)];
+//                test.backgroundColor = [UIColor redColor];
+//                [self.view addSubview:test];
+                NSLog(@"View_x : %f",view.frame.origin.x);
+//                NSLog(@"View_front : %f",view.front_gap);
                 return YES;
             }
         }
@@ -291,7 +296,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     if (self.groundColor!=0) {
         ground.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.5 brightness:0.9 alpha:1.0];
     }else{
-        ground.backgroundColor = [UIColor colorWithHue:0 saturation:0.5 brightness:0.9 alpha:1.0];
+        ground.backgroundColor = [UIColor grayColor];
     }
     self.firstGround = ground;
     self.totalScores = 0;  //新一轮游戏需要置零记分器
@@ -328,11 +333,11 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     if (self.groundColor!=0) {
         ground_new.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.5 brightness:0.9 alpha:1.0];
     }else{
-        ground_new.backgroundColor = [UIColor colorWithHue:0 saturation:0.5 brightness:0.9 alpha:1.0];
+        ground_new.backgroundColor = [UIColor grayColor];
     }
-    //设置ground的属性(将最后一个ground后的gap赋值给新创建的groundnew的frontgap)
-    GroundView * pre = self.ground_back.subviews.lastObject;
-    ground_new.front_gap = pre.behind_gap;
+//    //设置ground的属性(将最后一个ground后的gap赋值给新创建的groundnew的frontgap)
+//    GroundView * pre = self.ground_back.subviews.lastObject;
+//    ground_new.front_gap = pre.behind_gap;
     //检查游戏难度：
     if ([self checkLevel]) {
         [self updateGameLevel];//更新游戏难度
@@ -379,7 +384,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 }
 /*手势statebegin调用方法*/
 -(void)gestureStateBegin:(GroundView *)ground andPoint:(CGPoint)point andGesture:(UIPanGestureRecognizer*)sender{
-    NSLog(@"UIPanGestureRecognizer:%@",sender);
+//    NSLog(@"UIPanGestureRecognizer:%@",sender);
     if (self.currentGes==nil) {
         self.currentGes = sender;
         //第一次触摸view的点和view中心点的x方向的位移
@@ -389,7 +394,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 }
 /*手势statechanged回调方法*/
 -(void)gestureStateChanged:(GroundView *)ground andPoint:(CGPoint)point andGesture:(UIPanGestureRecognizer*)sender{
-    NSLog(@"UIPanGestureRecognizer:%@",sender);
+//    NSLog(@"UIPanGestureRecognizer:%@",sender);
     if (sender==self.currentGes) {
         //通过手势位置，计算出当前view的center
         point = CGPointMake(point.x-ground.move_x, ground.frame.origin.y+GROUND_HEIGHT/2);
@@ -487,6 +492,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     CGRect lastObj_frame = last_ground.frame;
     if (lastObj_frame.origin.x+lastObj_frame.size.width+last_ground.behind_gap<=SCREEN_WIDTH) {
         return lastObj_frame.origin.x+lastObj_frame.size.width+last_ground.behind_gap;
+//        return SCREEN_WIDTH;
     }
     return 0;
 }

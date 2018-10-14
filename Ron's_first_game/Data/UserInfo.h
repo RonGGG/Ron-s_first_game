@@ -15,6 +15,7 @@
  昵称，
  头像，
  性别，
+ 密码，
  最高分数：记录历史最高成绩（获取积分数组时用）
  分数数组：记录每次更新的积分信息
  背景颜色，
@@ -22,11 +23,12 @@
  球颜色
  }
 */
-@property (strong,nonatomic) NSNumber * uid;
+@property (strong,nonatomic) NSString * uid;
 @property (strong,nonatomic) NSString * nickName;
 @property (strong,nonatomic) NSData * avatar;
-@property (assign,nonatomic) BOOL isMale;
+@property (strong,nonatomic) NSString * sex;
 @property (assign,nonatomic) NSInteger highestScore;
+@property (strong,nonatomic) NSString * password;
 
 @property (assign,nonatomic) float background_Hue;
 @property (assign,nonatomic) float words_Hue;
