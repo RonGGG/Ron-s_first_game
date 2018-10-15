@@ -103,9 +103,10 @@
 }
 /*该方法检查是否需要生成新的ground,需要则返回需要新生成的view的x，否则返回0*/
 -(CGFloat)ground_check{
-    CGRect lastObj_frame = self.superview.subviews.lastObject.frame;
-    if (lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap<=SCREEN_WIDTH) {
-        return lastObj_frame.origin.x+lastObj_frame.size.width+self.behind_gap;
+    GroundView * last = self.superview.subviews.lastObject;
+    CGRect lastObj_frame = last.frame;
+    if (lastObj_frame.origin.x+lastObj_frame.size.width+last.behind_gap<=SCREEN_WIDTH) {
+        return lastObj_frame.origin.x+lastObj_frame.size.width+last.behind_gap;
 //        return SCREEN_WIDTH;
     }
     return 0;

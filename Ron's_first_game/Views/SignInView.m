@@ -163,6 +163,7 @@
                 }];
             }else{
                 NSLog(@"code = 200");
+                [self showAlert:@"账号或密码有误"];
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"Connection Failed");

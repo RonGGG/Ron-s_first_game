@@ -292,7 +292,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)createInitGround{
     //元祖ground:
     GroundView * ground = [[GroundView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2+BALL_DIAMETER/2, 0)];
-    NSLog(@"GroundColor:%f",self.groundColor);
+    NSLog(@"Behind : %f",ground.behind_gap);
     if (self.groundColor!=0) {
         ground.backgroundColor = [UIColor colorWithHue:self.groundColor saturation:0.5 brightness:0.9 alpha:1.0];
     }else{

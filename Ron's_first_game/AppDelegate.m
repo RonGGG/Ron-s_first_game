@@ -22,6 +22,7 @@
 //#include "sys/utsname.h"
 #import "UserInfo.h"
 #import "SignUpView.h"
+#import <AFNetworking.h>
 @interface AppDelegate ()
 
 @end
@@ -81,6 +82,14 @@ extern NSString * const firstTimeStartGame;
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     //保存用户信息到磁盘
     [UserInfo saveAccount];
+    //网络请求：更新用户信息
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
     NSLog(@"To disk:%@的最高分是：%ld",[UserInfo sharedUser].nickName,(long)[UserInfo sharedUser].highestScore);
     NSLog(@"To disk:%f",[UserInfo sharedUser].background_Hue);
 }
@@ -107,6 +116,14 @@ extern NSString * const firstTimeStartGame;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     //保存用户信息到磁盘
     [UserInfo saveAccount];
+    //网络请求：更新用户信息
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
     NSLog(@"Terminate To disk:%@的最高分是：%ld",[UserInfo sharedUser].nickName,(long)[UserInfo sharedUser].highestScore);
     NSLog(@"Terminate To disk:%f",[UserInfo sharedUser].background_Hue);
 }

@@ -84,12 +84,14 @@ extern NSString * const storeUserKey;
             self.username_label.textColor = [UIColor blackColor];
             self.playNow.layer.backgroundColor = [UIColor blackColor].CGColor;
             self.checkScores.layer.backgroundColor = [UIColor blackColor].CGColor;
+            self.logOut.layer.backgroundColor = [UIColor blackColor].CGColor;
             self.changeSkinView.backgroundColor = [UIColor blackColor];
         }else{
             self.welcome_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
             self.username_label.textColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
             self.playNow.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
             self.checkScores.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
+            self.logOut.layer.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0].CGColor;
             self.changeSkinView.backgroundColor = [UIColor colorWithHue:[UserInfo sharedUser].words_Hue saturation:0.5 brightness:1.0 alpha:1.0];
         }
     }
@@ -182,6 +184,18 @@ extern NSString * const storeUserKey;
     //    }
 //    username_label.text = [UserInfo sharedUser].nickName;
     [self.view addSubview:username_label];
+    //登出按钮：
+    UIButton * logOut = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/3*2-30, 50, SCREEN_WIDTH/2, 50)];
+    logOut.tag = 3;
+    self.logOut = logOut;
+    logOut.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
+    [logOut addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [logOut setTitle:@"Log out   ×" forState:UIControlStateNormal];
+    logOut.layer.cornerRadius = 25;
+    logOut.layer.masksToBounds = YES;
+    logOut.titleLabel.textColor = [UIColor whiteColor];
+    logOut.layer.backgroundColor = [UIColor blackColor].CGColor;
+    [self.view addSubview:logOut];
     //更换主题按钮L：
     CGFloat wid = SCREEN_WIDTH;
     
@@ -212,12 +226,14 @@ extern NSString * const storeUserKey;
             username_label.textColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
             btn.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
             checkScores.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
+            logOut.backgroundColor = [UIColor colorWithHue:color_h saturation:color_s brightness:color_b alpha:alpha];
             self.wordColor_Hue = color_h;
         }else{
             welcome_label.textColor = [UIColor blackColor];
             username_label.textColor = [UIColor blackColor];
             btn.backgroundColor = [UIColor blackColor];
             checkScores.backgroundColor = [UIColor blackColor];
+            logOut.backgroundColor = [UIColor blackColor];
             self.wordColor_Hue = 0;
         }
     };
@@ -230,18 +246,7 @@ extern NSString * const storeUserKey;
     
     [changeSkin_back addSubview:changeSkin];
     [self.view addSubview:changeSkin_back];
-    //登出按钮：
-    UIButton * logOut = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/3*2-30, 50, SCREEN_WIDTH/2, 50)];
-    logOut.tag = 3;
-    self.logOut = logOut;
-    logOut.titleLabel.font = [UIFont fontWithName:@"ArialRoundedMTBold" size:20];
-    [logOut addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-    [logOut setTitle:@"Log out   ×" forState:UIControlStateNormal];
-    logOut.layer.cornerRadius = 25;
-    logOut.layer.masksToBounds = YES;
-    logOut.titleLabel.textColor = [UIColor whiteColor];
-    logOut.layer.backgroundColor = [UIColor blackColor].CGColor;
-    [self.view addSubview:logOut];
+    
 }
 -(void)clickBtn:(UIButton*)sender{
     NSLog(@"Tag:%ld",sender.tag);
@@ -297,7 +302,19 @@ extern NSString * const storeUserKey;
         }
         case 3:
         {
-            
+            //网络请求：更新用户信息
+            AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+            NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+            [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                
+            }];
+            //设置本地用户信息
+            [UserInfo sharedUser].uid = nil;
+            [UserInfo sharedUser].isFirstTime = YES;
+            //进入SignUp页面
+            [self setSignUpView];
             break;
         }
         default:

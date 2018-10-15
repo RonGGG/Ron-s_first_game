@@ -192,41 +192,21 @@
             //对比两次输入密码是否相同
             if ([self.password_string isEqualToString:self.passwordVerify_string]) {
                 NSLog(@"Successfully!");
-                AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-                NSDictionary * dic = @{@"nickname":self.nickName_string,@"password":self.password_string,@"sex":self.sex};
-                [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                    NSDictionary * responds = responseObject;
-                    NSNumber * code = [responds objectForKey:@"code"];
-                    
-                    if (code.integerValue==100) {
-                        NSLog(@"code = 100");
-                        NSLog(@"创建成功!");
-                        NSDictionary * data = [responds objectForKey:@"data"];
-                        NSNumber * uid = [data objectForKey:@"uid"];
-                        NSString * pass = [data objectForKey:@"password"];
-                        NSString * highest = [data objectForKey:@"highScore"];
-                        //设置本地用户信息:
-                        UserInfo * user = [UserInfo sharedUser];
-                        user.uid = [NSString stringWithFormat:@"%@",uid];
-                        user.nickName = [NSString stringWithFormat:@"%@",self.nickName_string];
-                        user.sex = [NSString stringWithFormat:@"%@",self.sex];
-                        user.password = [NSString stringWithFormat:@"%@",pass];
-                        user.highestScore = [[NSString stringWithFormat:@"%@",highest] integerValue];
-                        
-                        [UIView animateWithDuration:0.3 animations:^{
-                            self.center = CGPointMake(self.center.x, self.center.y+SCREEN_HEIGHT);
-                        } completion:^(BOOL finished) {
-                            if (finished) {
-                                self.block_resetUI();
-                                [self removeFromSuperview];
-                            }
-                        }];
+                //检查该用户明是否重复
+                AFHTTPSessionManager *pre_manager = [AFHTTPSessionManager manager];
+                [pre_manager GET:[NSString stringWithFormat:@"%@/user/uid/0",MAIN_DOMAIN] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    NSDictionary * res = responseObject;
+                    NSNumber * pre_code = [res objectForKey:@"code"];
+                    if (pre_code.integerValue==100) {//用户存在
+                        NSLog(@"用户名已存在，不能创建");
+                        [self showAlert:@"用户名已存在，不能创建"];
                     }else{
-                        NSLog(@"code = 200");
+                        [self creatUser];
                     }
                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    NSLog(@"Connection Failed");
+                    
                 }];
+                
             }else{
                 [self showAlert:@"Inconsistent password"];
             }
@@ -240,7 +220,45 @@
         [self removeFromSuperview];
     }
 }
-
+//
+-(void)creatUser{
+    //请求创建用户：
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    NSDictionary * dic = @{@"nickname":self.nickName_string,@"password":self.password_string,@"sex":self.sex};
+    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary * responds = responseObject;
+        NSNumber * code = [responds objectForKey:@"code"];
+        
+        if (code.integerValue==100) {
+            NSLog(@"code = 100");
+            NSLog(@"创建成功!");
+            NSDictionary * data = [responds objectForKey:@"data"];
+            NSNumber * uid = [data objectForKey:@"uid"];
+            NSString * pass = [data objectForKey:@"password"];
+            NSString * highest = [data objectForKey:@"highScore"];
+            //设置本地用户信息:
+            UserInfo * user = [UserInfo sharedUser];
+            user.uid = [NSString stringWithFormat:@"%@",uid];
+            user.nickName = [NSString stringWithFormat:@"%@",self.nickName_string];
+            user.sex = [NSString stringWithFormat:@"%@",self.sex];
+            user.password = [NSString stringWithFormat:@"%@",pass];
+            user.highestScore = [[NSString stringWithFormat:@"%@",highest] integerValue];
+            
+            [UIView animateWithDuration:0.3 animations:^{
+                self.center = CGPointMake(self.center.x, self.center.y+SCREEN_HEIGHT);
+            } completion:^(BOOL finished) {
+                if (finished) {
+                    self.block_resetUI();
+                    [self removeFromSuperview];
+                }
+            }];
+        }else{
+            NSLog(@"code = 200");
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"Connection Failed");
+    }];
+}
 //textfield输入结束调用
 -(void)tapBack:(UITapGestureRecognizer*)tap{
     NSLog(@"Tap");
