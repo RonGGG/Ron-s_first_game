@@ -11,6 +11,7 @@
 #import <AFNetworking.h>
 #import "UserInfo.h"
 #import "SignInView.h"
+
 @interface SignUpView()
 @property (weak,nonatomic) LoginTextfield * nickName_textField;
 @property (weak,nonatomic) LoginTextfield * password_textField;
@@ -167,7 +168,7 @@
 //点击登录
 -(void)clickSignUp:(UIButton *)btn{
     [self.current_textfield resignFirstResponder];
-    if (btn.tag==0) {
+    if (btn.tag==0) {//点击注册
         //视图调回
         if (self.center.y!=SCREEN_HEIGHT) {
             [UIView animateWithDuration:0.2 animations:^{
@@ -194,7 +195,7 @@
                 NSLog(@"Successfully!");
                 //检查该用户明是否重复
                 AFHTTPSessionManager *pre_manager = [AFHTTPSessionManager manager];
-                [pre_manager GET:[NSString stringWithFormat:@"%@/user/uid/0",MAIN_DOMAIN] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                [pre_manager GET:[NSString stringWithFormat:@"%@/user/nickname/%@",MAIN_DOMAIN,self.nickName_string] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                     NSDictionary * res = responseObject;
                     NSNumber * pre_code = [res objectForKey:@"code"];
                     if (pre_code.integerValue==100) {//用户存在
@@ -204,20 +205,18 @@
                         [self creatUser];
                     }
                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    
                 }];
-                
             }else{
                 [self showAlert:@"Inconsistent password"];
             }
         }
-    }else{
+    }else{//点击登录
         SignInView * signIn = [[SignInView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*2)];
         signIn.block_resetUI = ^{
             self.block_resetUI();
         };
-        [self.superview addSubview:signIn];
-        [self removeFromSuperview];
+        [self addSubview:signIn];
+//        [self removeFromSuperview];
     }
 }
 //

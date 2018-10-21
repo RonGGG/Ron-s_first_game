@@ -12,7 +12,7 @@
 #import "TheCardView.h"
 #import "UserInfo.h"
 #import "UINavigationController+WXSTransition.h"
-
+#import <AFNetworking.h>
 #import "AppDelegate.h"
 @interface ViewController ()
 /*UI属性*/
@@ -201,6 +201,20 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     NSLog(@"viewWillDisappear");
+    //比较分数
+    if (((NSInteger)self.totalScores) > [UserInfo sharedUser].highestScore) {
+        [UserInfo sharedUser].highestScore = self.totalScores;
+    }
+    NSLog(@"uid %@",[UserInfo sharedUser].uid);
+    NSLog(@"user highest: %ld",[UserInfo sharedUser].highestScore);
+    //网络请求：更新用户信息
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    NSDictionary * dic = @{@"uid":[NSString stringWithFormat:@"%@",[UserInfo sharedUser].uid],@"score":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/score/save"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"msg: %@",[responseObject objectForKey:@"msg"]);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"error:%@",error);
+    }];
 }
 //-(void)timer:(id)sender{
 //    self.count+=10;

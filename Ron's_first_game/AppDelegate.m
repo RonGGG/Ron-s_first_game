@@ -80,16 +80,18 @@ extern NSString * const firstTimeStartGame;
     NSLog(@"applicationDidEnterBackground");
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    //保存用户信息到磁盘
-    [UserInfo saveAccount];
-    //网络请求：更新用户信息
-    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
-    NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
-    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-    }];
+    if ([UserInfo sharedUser].uid!=nil) {//登陆状态下
+        //保存用户信息到磁盘
+        [UserInfo saveAccount];
+        //网络请求：更新用户信息
+        AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+        NSDictionary * dic = @{@"uid":[NSString stringWithFormat:@"%@",[UserInfo sharedUser].uid],@"score":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+        [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/score/save"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"msg: %@",[responseObject objectForKey:@"msg"]);
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"error:%@",error);
+        }];
+    }
     NSLog(@"To disk:%@的最高分是：%ld",[UserInfo sharedUser].nickName,(long)[UserInfo sharedUser].highestScore);
     NSLog(@"To disk:%f",[UserInfo sharedUser].background_Hue);
 }
@@ -114,16 +116,18 @@ extern NSString * const firstTimeStartGame;
 - (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"applicationWillTerminate");
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    //保存用户信息到磁盘
-    [UserInfo saveAccount];
-    //网络请求：更新用户信息
-    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
-    NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
-    [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-    }];
+    if ([UserInfo sharedUser].uid!=nil) {//登陆状态下
+        //保存用户信息到磁盘
+        [UserInfo saveAccount];
+        //网络请求：更新用户信息
+        AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+        NSDictionary * dic = @{@"uid":[NSString stringWithFormat:@"%@",[UserInfo sharedUser].uid],@"score":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+        [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/score/save"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"msg: %@",[responseObject objectForKey:@"msg"]);
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"error:%@",error);
+        }];
+    }
     NSLog(@"Terminate To disk:%@的最高分是：%ld",[UserInfo sharedUser].nickName,(long)[UserInfo sharedUser].highestScore);
     NSLog(@"Terminate To disk:%f",[UserInfo sharedUser].background_Hue);
 }

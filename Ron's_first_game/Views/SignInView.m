@@ -108,12 +108,24 @@
         login.layer.backgroundColor = [UIColor blackColor].CGColor;
         [login addTarget:self action:@selector(clickSign:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:login];
+        //返回注册页面
+        UIButton * backToSignUp = [[UIButton alloc]initWithFrame:CGRectMake(nickName_x, nickName_y+225+50, SCREEN_WIDTH-40, 40)];
+        backToSignUp.tag = 2;
+        [backToSignUp setTitle:@"Sign up" forState:UIControlStateNormal];
+        backToSignUp.layer.cornerRadius = 5;
+        backToSignUp.layer.backgroundColor = [UIColor blackColor].CGColor;
+        [backToSignUp addTarget:self action:@selector(clickSign:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:backToSignUp];
     }
     return self;
 }
 //
 -(void)clickSign:(UIButton*)btn{
     [self.current_textfield resignFirstResponder];
+    if (btn.tag==2) {//返回注册页面
+        [self removeFromSuperview];
+        return;
+    }
     //视图调回
     if (self.center.y!=SCREEN_HEIGHT) {
         [UIView animateWithDuration:0.2 animations:^{
@@ -158,12 +170,13 @@
                 } completion:^(BOOL finished) {
                     if (finished) {
                         self.block_resetUI();
-                        [self removeFromSuperview];
+                        [self.superview removeFromSuperview];
                     }
                 }];
             }else{
                 NSLog(@"code = 200");
-                [self showAlert:@"账号或密码有误"];
+                NSString * msg = [NSString stringWithFormat:@"%@",[responds objectForKey:@"msg"]];
+                [self showAlert:msg];
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"Connection Failed");

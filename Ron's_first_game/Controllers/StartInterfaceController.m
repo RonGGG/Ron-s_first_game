@@ -126,12 +126,18 @@ extern NSString * const storeUserKey;
             }
         }else{
             NSLog(@"Need to login View");
+            SignUpView * log = [[SignUpView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*2)];
+            log.block_resetUI = ^{
+                self.username_label.text = [UserInfo sharedUser].nickName;
+                [UserInfo saveAccount];
+            };
+            [self.view addSubview:log];
             SignInView * signIn = [[SignInView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*2)];
             signIn.block_resetUI = ^{
                 self.username_label.text = [UserInfo sharedUser].nickName;
                 [UserInfo saveAccount];
             };
-            [self.view addSubview:signIn];
+            [log addSubview:signIn];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"checkAccount Error");
@@ -304,11 +310,11 @@ extern NSString * const storeUserKey;
         {
             //网络请求：更新用户信息
             AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
-            NSDictionary * dic = @{@"uid":[UserInfo sharedUser].uid,@"nickname":[UserInfo sharedUser].nickName,@"password":[UserInfo sharedUser].password,@"highScore":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
-            [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/user/edit"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                
+            NSDictionary * dic = @{@"uid":[NSString stringWithFormat:@"%@",[UserInfo sharedUser].uid],@"score":[NSString stringWithFormat:@"%ld",[UserInfo sharedUser].highestScore]};
+            [manager POST:[NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/score/save"] parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                NSLog(@"msg: %@",[responseObject objectForKey:@"msg"]);
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                
+                NSLog(@"error:%@",error);
             }];
             //设置本地用户信息
             [UserInfo sharedUser].uid = nil;

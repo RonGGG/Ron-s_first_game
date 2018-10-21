@@ -9,10 +9,16 @@
 #import "ScoresViewController.h"
 #import "UserInfo.h"
 #import <AFNetworking.h>
-@interface ScoresViewController ()
+#import "ScoresListTableViewCell.h"
+#import <MJRefresh.h>
+@interface ScoresViewController () <UITableViewDelegate,UITableViewDataSource>
+/*UI*/
 @property (weak,nonatomic) UIView * backView;
+@property (weak,nonatomic) UITableView * table;
+@property (weak,nonatomic) UILabel * highest;
 /*数据*/
 @property (strong,nonatomic) NSMutableArray * scoreList;
+@property (assign,nonatomic) NSInteger pageCount;
 @end
 //safe area适配：
 static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
@@ -39,6 +45,45 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     }else{
         self.view.backgroundColor = [UIColor whiteColor];
     }
+    self.scoreList = [NSMutableArray array];
+    self.pageCount = 1;
+    //设置ui
+    [self setUI];
+    //获取table数据(first time)
+    [self getTableData_firstTime];
+}
+-(void)getTableData_firstTime{
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    NSDictionary * dic = @{@"number":@"20"};
+    NSString * url_string = [NSString stringWithFormat:@"%@%@",MAIN_DOMAIN,@"/score/rank"];
+    [manager POST:url_string parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary * response = responseObject;
+        NSNumber * code = [response objectForKey:@"code"];
+        if (code.integerValue==100) {//获取成功
+            NSArray * datas = [response objectForKey:@"data"];
+            NSLog(@"DATAS:%@",datas);
+            for (NSDictionary * each in datas) {
+                ScoreListCellContent * content = [[ScoreListCellContent alloc]init];
+                content.nickname = [NSString stringWithFormat:@"%@",[each objectForKey:@"nickname"]];
+                content.avatar_url = [NSString stringWithFormat:@"%@",[each objectForKey:@"avatar"]];
+                content.highestScore = [NSString stringWithFormat:@"%@",[each objectForKey:@"highScore"]];
+                [self.scoreList addObject:content];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //更新最高分
+                ScoreListCellContent * tmp = self.scoreList[0];
+                self.highest.text = tmp.highestScore;
+                //更新列表
+                [self.table reloadData];
+            });
+        }else{
+            
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+}
+-(void)setUI{
     //设置backView
     //BackView
     UIView * backView = [[UIView alloc]init];
@@ -98,6 +143,7 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     [self.backView addSubview:myHighest];
     //所有最高分
     UILabel * highest = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2+10, myHighest_label_yMax, SCREEN_WIDTH/2, 40)];
+    self.highest = highest;
     if (self.highest_Hue!=0) {
         highest.textColor = [UIColor colorWithHue:self.highest_Hue saturation:0.5 brightness:1.0 alpha:1.0];
     }else{
@@ -120,7 +166,24 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     scoreList_label.textAlignment = NSTextAlignmentLeft;
     [self.backView addSubview:scoreList_label];
     //显示分数list
-    
+    UITableView * table = [[UITableView alloc]initWithFrame:CGRectMake(10, myHighest_yMax+40+50, SCREEN_WIDTH-20, SCREEN_HEIGHT/11*6) style:UITableViewStylePlain];
+    self.table = table;
+    table.backgroundColor = [UIColor clearColor];
+    table.separatorStyle = UITableViewCellSeparatorStyleNone;
+    table.allowsSelection = NO;
+    table.dataSource = self;
+    table.delegate = self;
+    [self.backView addSubview:table];
+//    //上拉：
+//    table.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
+//
+//    }];
+//    //下拉：
+//    table.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+//
+//    }];
+//    [table registerClass:[ScoresListTableViewCell class] forCellWithReuseIdentifier:NSStringFromClass([ScoresListTableViewCell class])];
+//    [table registerClass:[ScoresListTableViewCell class] forCellReuseIdentifier:@"scoresList"];
 }
 //返回Start界面
 -(void)goBackTo_startInterface{
@@ -159,6 +222,95 @@ static inline UIEdgeInsets sgm_safeAreaInset(UIView *view) {
     UIImage * currentImg = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return currentImg;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 20;
+}
+- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    //cell的UI初始化
+    ScoresListTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"scoresList"];
+    if (cell==nil) {
+        cell = [[ScoresListTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"scoresList"];
+    }
+    //cell的e内容填充
+    if (self.scoreList.count!=0) {
+        if (indexPath.row<self.scoreList.count) {
+            NSLog(@"indexPath.row=%ld",indexPath.row);
+            cell.content = self.scoreList[indexPath.row];//注意：这里是弱指针指向一个强对象
+            cell.rank_label.text = [NSString stringWithFormat:@"%ld",indexPath.row+1];
+            cell.words_hue = self.scoreList_label_Hue;
+        }else{
+            cell.content = nil;
+            cell.rank_label.text = @"";
+        }
+    }
+    return cell;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    switch (indexPath.row) {
+        case 0:{
+            return 70;
+            break;
+        }
+        case 1:{
+            return 60;
+            break;
+        }
+        case 2:{
+            return 50;
+            break;
+        }
+        default:{
+            return 40;
+            break;
+        }
+    }
+}
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder {
+    
+}
+
+- (void)traitCollectionDidChange:(nullable UITraitCollection *)previousTraitCollection {
+    
+}
+
+- (void)preferredContentSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
+    
+}
+
+//- (CGSize)sizeForChildContentContainer:(nonnull id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
+//    <#code#>
+//}
+
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(nonnull id<UIContentContainer>)container {
+    
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+}
+
+- (void)willTransitionToTraitCollection:(nonnull UITraitCollection *)newCollection withTransitionCoordinator:(nonnull id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+}
+
+- (void)didUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context withAnimationCoordinator:(nonnull UIFocusAnimationCoordinator *)coordinator {
+    
+}
+
+- (void)setNeedsFocusUpdate {
+    
+}
+
+//- (BOOL)shouldUpdateFocusInContext:(nonnull UIFocusUpdateContext *)context {
+//
+//}
+
+- (void)updateFocusIfNeeded {
+    
 }
 
 @end

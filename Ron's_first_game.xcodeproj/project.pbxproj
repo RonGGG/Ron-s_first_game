@@ -14,6 +14,8 @@
 		7F0877B1215207F10033AD6E /* ChangSkinView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F0877B0215207F10033AD6E /* ChangSkinView.m */; };
 		7F3BC7E5215C80C700F8EE51 /* SignUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BC7E4215C80C700F8EE51 /* SignUpView.m */; };
 		7F3BC7EB215CC20700F8EE51 /* LoginTextfield.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BC7EA215CC20700F8EE51 /* LoginTextfield.m */; };
+		7FD339B1217C99A900D5C7B3 /* ScoresListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD339B0217C99A900D5C7B3 /* ScoresListTableViewCell.m */; };
+		7FD339B4217CB16A00D5C7B3 /* ScoreListCellContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD339B3217CB16A00D5C7B3 /* ScoreListCellContent.m */; };
 		A787730C2112F8EE00CAEB7B /* GlobalVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = A787730B2112F8EE00CAEB7B /* GlobalVariables.m */; };
 		A7AF114E2108C25900AAC40F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF114D2108C25900AAC40F /* AppDelegate.m */; };
 		A7AF11512108C25900AAC40F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7AF11502108C25900AAC40F /* ViewController.m */; };
@@ -80,6 +82,10 @@
 		7F3BC7E4215C80C700F8EE51 /* SignUpView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignUpView.m; sourceTree = "<group>"; };
 		7F3BC7E9215CC20700F8EE51 /* LoginTextfield.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginTextfield.h; sourceTree = "<group>"; };
 		7F3BC7EA215CC20700F8EE51 /* LoginTextfield.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginTextfield.m; sourceTree = "<group>"; };
+		7FD339AF217C99A900D5C7B3 /* ScoresListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScoresListTableViewCell.h; sourceTree = "<group>"; };
+		7FD339B0217C99A900D5C7B3 /* ScoresListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScoresListTableViewCell.m; sourceTree = "<group>"; };
+		7FD339B2217CB16A00D5C7B3 /* ScoreListCellContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScoreListCellContent.h; sourceTree = "<group>"; };
+		7FD339B3217CB16A00D5C7B3 /* ScoreListCellContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScoreListCellContent.m; sourceTree = "<group>"; };
 		A76BE204212943B600EFE4B8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A787730A2112F8EE00CAEB7B /* GlobalVariables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalVariables.h; sourceTree = "<group>"; };
 		A787730B2112F8EE00CAEB7B /* GlobalVariables.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlobalVariables.m; sourceTree = "<group>"; };
@@ -269,6 +275,8 @@
 				7F3BC7EA215CC20700F8EE51 /* LoginTextfield.m */,
 				7F00F8B5215DE49000F18655 /* SignInView.h */,
 				7F00F8B6215DE49000F18655 /* SignInView.m */,
+				7FD339AF217C99A900D5C7B3 /* ScoresListTableViewCell.h */,
+				7FD339B0217C99A900D5C7B3 /* ScoresListTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -291,6 +299,8 @@
 			children = (
 				A7B679022116F66700F7DAC1 /* UserInfo.h */,
 				A7B679032116F66700F7DAC1 /* UserInfo.m */,
+				7FD339B2217CB16A00D5C7B3 /* ScoreListCellContent.h */,
+				7FD339B3217CB16A00D5C7B3 /* ScoreListCellContent.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -361,6 +371,7 @@
 				A7AF11452108C25900AAC40F /* Sources */,
 				A7AF11462108C25900AAC40F /* Frameworks */,
 				A7AF11472108C25900AAC40F /* Resources */,
+				1CFDC8B819A62D8A1A1DA2BB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -479,6 +490,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1CFDC8B819A62D8A1A1DA2BB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Ron's_first_game/Pods-Ron's_first_game-resources.sh",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ron's_first_game/Pods-Ron's_first_game-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		934B8EFA681054C47B7B9860 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -554,11 +587,13 @@
 			files = (
 				A7B679EA2118498E00F7DAC1 /* WXSTransitionManager+FragmentAnimation.m in Sources */,
 				A7B9F74C2111F5AE00F0949E /* StartInterfaceController.m in Sources */,
+				7FD339B1217C99A900D5C7B3 /* ScoresListTableViewCell.m in Sources */,
 				A7B679E22118498E00F7DAC1 /* WXSTransitionManager+PageAnimation.m in Sources */,
 				7F0877B1215207F10033AD6E /* ChangSkinView.m in Sources */,
 				A7B679E62118498E00F7DAC1 /* UIViewController+WXSTransition.m in Sources */,
 				A7B679ED2118498E00F7DAC1 /* WXSTransitionManager+ViewMoveAnimation.m in Sources */,
 				A7B6791E211814BB00F7DAC1 /* ScoresViewController.m in Sources */,
+				7FD339B4217CB16A00D5C7B3 /* ScoreListCellContent.m in Sources */,
 				A7B679042116F66700F7DAC1 /* UserInfo.m in Sources */,
 				A7AF11512108C25900AAC40F /* ViewController.m in Sources */,
 				7F3BC7EB215CC20700F8EE51 /* LoginTextfield.m in Sources */,
